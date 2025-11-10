@@ -19,11 +19,8 @@ import FilePreviewModal from './components/modals/FilePreviewModal';
 import SimulationSetupModal from './components/modals/SimulationSetupModal';
 import Footer from './components/Footer';
 import { useLanguage } from './languageContext';
-import { getUsers, saveUsers, simpleHash } from './utils/auth';
-import { getCourses, saveCourses } from './utils/course';
-import { getLinks, saveLinks } from './utils/links';
-import { getEvents, saveEvents } from './utils/calendar';
-import { generateId } from './utils/auth';
+import { simpleHash, generateId } from './utils/auth';
+import { getCourses, saveCourses, getUsers, saveUsers, getLinks, saveLinks, getEvents, saveEvents } from './api';
 import { PlusIcon } from './components/icons';
 
 const isItemVisibleToStudent = (item: { classrooms?: Classroom[], years?: SchoolYear[] }, student: User | null): boolean => {

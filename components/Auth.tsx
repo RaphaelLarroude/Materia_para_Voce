@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../languageContext';
 import { User, Classroom, SchoolYear, UserRole, StoredUser } from '../types';
-import { getUsers, saveUsers, simpleHash, generateId } from '../utils/auth';
+// Fix: getUsers and saveUsers are now imported from the centralized api.ts file.
+import { getUsers, saveUsers } from '../api';
+import { simpleHash, generateId } from '../utils/auth';
 
 interface AuthProps {
   onLoginSuccess: (user: User) => void;
