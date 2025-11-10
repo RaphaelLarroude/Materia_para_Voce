@@ -32,40 +32,31 @@ const createDefaultTeacher = (): StoredUser => ({
 export const getUsers = (): StoredUser[] => {
   try {
     const usersJson = localStorage.getItem(USERS_KEY);
-    let users: StoredUser[] = usersJson ? JSON.parse(usersJson) : [];
+
+    // If no users exist (first run), create the default teacher.
+    if (!usersJson) {
+      const defaultUsers = [createDefaultTeacher()];
+      saveUsers(defaultUsers);
+      return defaultUsers;
+    }
+
+    // If users exist, just parse and return them.
+    const users: StoredUser[] = JSON.parse(usersJson);
     
-    // Ensure users is a valid array
+    // Basic validation to prevent app crash on corrupted data
     if (!Array.isArray(users)) {
-        users = [];
-    }
-
-    // Defensively find admin user and filter out malformed entries
-    const adminIndex = users.findIndex((u) => u && u.id === 'rapha-admin-id');
-    const adminByEmailIndex = users.findIndex((u) => u && u.email?.toLowerCase() === 'rapha@raphaelcosta.com.br');
-
-    let existingAdminData = {};
-    if (adminIndex > -1) {
-        existingAdminData = users[adminIndex];
-    } else if (adminByEmailIndex > -1) { // Typo fixed here
-        existingAdminData = users[adminByEmailIndex];
+        console.error("User data in localStorage is corrupted. Resetting to default.");
+        const defaultUsers = [createDefaultTeacher()];
+        saveUsers(defaultUsers);
+        return defaultUsers;
     }
     
-    // Filter out any malformed users and the old admin account to prevent duplicates
-    const otherUsers = users.filter((u) => u && u.email && u.email.toLowerCase() !== 'rapha@raphaelcosta.com.br');
-    
-    const updatedAdmin: StoredUser = { ...createDefaultTeacher(), ...existingAdminData, id: 'rapha-admin-id' };
-    
-    const finalUsers = [...otherUsers, updatedAdmin];
-    
-    saveUsers(finalUsers);
-    return finalUsers;
+    return users;
 
   } catch (error) {
     console.error("Failed to load or parse users from localStorage", error);
-    // If anything fails, reset to a clean state with the default teacher
-    const defaultUsers = [createDefaultTeacher()];
-    saveUsers(defaultUsers);
-    return defaultUsers;
+    // If parsing fails, return a safe default to prevent crashing, but don't overwrite.
+    return [createDefaultTeacher()];
   }
 };
 
