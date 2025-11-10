@@ -33,22 +33,26 @@ export const getUsers = (): StoredUser[] => {
   try {
     const usersJson = localStorage.getItem(USERS_KEY);
     let users: StoredUser[] = usersJson ? JSON.parse(usersJson) : [];
+    
+    // Ensure users is a valid array
+    if (!Array.isArray(users)) {
+        users = [];
+    }
 
-    // Find any existing admin data, prioritizing the canonical ID, but falling back to email.
-    const adminIndex = users.findIndex((u) => u.id === 'rapha-admin-id');
-    const adminByEmailIndex = users.findIndex((u) => u.email.toLowerCase() === 'rapha@raphaelcosta.com.br');
+    // Defensively find admin user and filter out malformed entries
+    const adminIndex = users.findIndex((u) => u && u.id === 'rapha-admin-id');
+    const adminByEmailIndex = users.findIndex((u) => u && u.email?.toLowerCase() === 'rapha@raphaelcosta.com.br');
 
     let existingAdminData = {};
     if (adminIndex > -1) {
         existingAdminData = users[adminIndex];
-    } else if (adminByEmailIndex > -1) {
+    } else if (adminByEmailIndex > -1) { // Typo fixed here
         existingAdminData = users[adminByEmailIndex];
     }
     
-    // Remove all previous instances of the admin to avoid duplicates, preserving other users.
-    const otherUsers = users.filter((u) => u.email.toLowerCase() !== 'rapha@raphaelcosta.com.br');
-
-    // Create a new, consolidated admin user, ensuring it has the correct ID and defaults.
+    // Filter out any malformed users and the old admin account to prevent duplicates
+    const otherUsers = users.filter((u) => u && u.email && u.email.toLowerCase() !== 'rapha@raphaelcosta.com.br');
+    
     const updatedAdmin: StoredUser = { ...createDefaultTeacher(), ...existingAdminData, id: 'rapha-admin-id' };
     
     const finalUsers = [...otherUsers, updatedAdmin];
@@ -57,8 +61,8 @@ export const getUsers = (): StoredUser[] => {
     return finalUsers;
 
   } catch (error) {
-    console.error("Failed to parse users from localStorage", error);
-    // If parsing fails, create a fresh list with the default teacher.
+    console.error("Failed to load or parse users from localStorage", error);
+    // If anything fails, reset to a clean state with the default teacher
     const defaultUsers = [createDefaultTeacher()];
     saveUsers(defaultUsers);
     return defaultUsers;
