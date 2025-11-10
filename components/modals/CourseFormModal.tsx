@@ -34,10 +34,10 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
       setImageUrl(courseToEdit.imageUrl);
       setClassrooms(courseToEdit.classrooms || []);
       setYears(courseToEdit.years || []);
-      const name = (Object.keys(icons) as (keyof typeof icons)[]).find(
-        (key) => icons[key] === courseToEdit.icon
-      );
-      if (name) setIconName(name);
+      // Fix: Use iconName from courseToEdit to set the correct icon in the dropdown
+      if (courseToEdit.iconName && iconNames.includes(courseToEdit.iconName as keyof typeof icons)) {
+        setIconName(courseToEdit.iconName as keyof typeof icons);
+      }
     } else {
       setTitle('');
       setImageUrl('');

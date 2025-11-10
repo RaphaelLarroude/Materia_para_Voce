@@ -1,158 +1,216 @@
-import { StoredUser, Course, SidebarLink, CalendarEvent } from './types';
-import { generateId, simpleHash } from './utils/auth';
-
-// --- Constants for localStorage keys ---
-const USERS_KEY = 'materiaParaVoce_users';
-const COURSES_KEY = 'materiaParaVoce_courses';
-const LINKS_KEY = 'materiaParaVoce_sidebarLinks';
-const EVENTS_KEY = 'materiaParaVoce_calendarEvents';
+import { StoredUser, Course, SidebarLink, CalendarEvent, StudyMaterial } from './types';
+import { supabase } from './supabaseClient';
+import { v4 as uuidv4 } from 'uuid';
 
 // ===================================================================================
 // NOTE TO DEVELOPER:
-// This file simulates a backend API using localStorage. In a real-world application,
-// all functions in this file should be replaced with actual HTTP requests (e.g., fetch)
-// to a real backend server to ensure data is centralized and accessible across devices.
-// Example:
-//
-// export const getCourses = async (): Promise<Course[]> => {
-//   const response = await fetch('/api/courses');
-//   if (!response.ok) {
-//     throw new Error('Failed to fetch courses');
-//   }
-//   return await response.json();
-// };
+// This file now connects to a REAL Supabase backend.
+// Ensure your Supabase project has the correct tables and RLS policies set up.
 // ===================================================================================
 
+// --- User Profile Management (Supabase Auth handles users) ---
 
-// --- User Management ---
+export const getUserProfile = async (userId: string): Promise<StoredUser | null> => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
 
-const createDefaultTeacher = (): StoredUser => ({
-    id: 'rapha-admin-id',
-    name: 'Raphael Costa',
-    email: 'rapha@raphaelcosta.com.br',
-    passwordHash: simpleHash('password'),
-    role: 'teacher',
-    isActive: true,
-    year: 9,
-    classroom: 'A',
-});
-
-export const getUsers = (): StoredUser[] => {
-  try {
-    const usersJson = localStorage.getItem(USERS_KEY);
-
-    if (!usersJson) {
-      const defaultUsers = [createDefaultTeacher()];
-      saveUsers(defaultUsers);
-      return defaultUsers;
+    if (error) {
+        console.error('Error fetching user profile:', error);
+        return null;
     }
-
-    const users: StoredUser[] = JSON.parse(usersJson);
-    
-    if (!Array.isArray(users)) {
-        console.error("User data in localStorage is corrupted. Resetting to default.");
-        const defaultUsers = [createDefaultTeacher()];
-        saveUsers(defaultUsers);
-        return defaultUsers;
-    }
-    
-    return users;
-
-  } catch (error) {
-    console.error("Failed to load or parse users from localStorage", error);
-    return [createDefaultTeacher()];
-  }
+    return data;
 };
 
-export const saveUsers = (users: StoredUser[]): void => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+export const getAllUserProfiles = async (): Promise<StoredUser[]> => {
+     const { data, error } = await supabase
+        .from('profiles')
+        .select('*');
+    
+    if (error) {
+        console.error('Error fetching all profiles:', error);
+        return [];
+    }
+    return data;
+}
+
+export const updateUserProfile = async (userId: string, profileData: Partial<StoredUser>): Promise<StoredUser> => {
+    const { data, error } = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', userId)
+        .select()
+        .single();
+    
+    if (error) {
+        console.error('Error updating profile:', error);
+        throw error;
+    }
+    return data;
 };
+
 
 // --- Course Management ---
 
-export const getCourses = (): Course[] => {
-  try {
-    const coursesJson = localStorage.getItem(COURSES_KEY);
-    return coursesJson ? JSON.parse(coursesJson) : [];
-  } catch (error) {
-    console.error("Failed to parse courses from localStorage", error);
-    localStorage.removeItem(COURSES_KEY);
-    return [];
-  }
+// Fix: Return type reflects that the API provides `iconName` string, not the component.
+export const getCourses = async (): Promise<Omit<Course, 'icon'>[]> => {
+    const { data, error } = await supabase
+        .from('courses')
+        .select('*');
+    
+    if (error) {
+        console.error('Error fetching courses:', error);
+        return [];
+    }
+    // Fix: Return raw data; component resolution is a UI concern.
+    return data as Omit<Course, 'icon'>[];
 };
 
-export const saveCourses = (courses: Course[]): void => {
-  try {
-    localStorage.setItem(COURSES_KEY, JSON.stringify(courses));
-  } catch (e: any) {
-    if (e.name === 'QuotaExceededError' || (e.code && (e.code === 22 || e.code === 1014))) {
-      throw new Error('fileTooLargeError');
+// Fix: Return type reflects that the API provides `iconName` string, not the component.
+export const saveCourse = async (course: Partial<Course>): Promise<Omit<Course, 'icon'>> => {
+    const { data, error } = await supabase
+        .from('courses')
+        .upsert(course)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error saving course:', error);
+        throw error;
     }
-    throw new Error('fileProcessingError');
-  }
+    return data as Omit<Course, 'icon'>;
 };
+
+export const deleteCourse = async (courseId: string): Promise<void> => {
+    const { error } = await supabase
+        .from('courses')
+        .delete()
+        .eq('id', courseId);
+    
+    if (error) {
+        console.error('Error deleting course:', error);
+        throw error;
+    }
+};
+
+// --- File/Material Upload ---
+
+function base64ToBlob(base64: string, mimeType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+}
+
+export const uploadMaterialFile = async (materialData: Omit<StudyMaterial, 'id'>): Promise<string> => {
+    if (materialData.type !== 'file' || !materialData.content.startsWith('data:')) {
+        throw new Error('Invalid file data for upload.');
+    }
+    
+    const [meta, data] = materialData.content.split(',');
+    const mimeType = meta.split(':')[1].split(';')[0];
+    const fileBlob = base64ToBlob(data, mimeType);
+    const fileName = `${uuidv4()}-${materialData.fileName || 'file'}`;
+    
+    const { data: uploadData, error } = await supabase.storage
+        .from('material-files') // Make sure you have a bucket named 'material-files'
+        .upload(fileName, fileBlob, {
+            cacheControl: '3600',
+            upsert: false
+        });
+
+    if (error) {
+        console.error("Error uploading file to Supabase Storage", error);
+        throw new Error('fileProcessingError');
+    }
+
+    const { data: { publicUrl } } = supabase.storage.from('material-files').getPublicUrl(uploadData.path);
+    
+    return publicUrl;
+}
+
 
 // --- Sidebar Links Management ---
 
-const getDefaultLinks = (): SidebarLink[] => {
-    const defaultTexts: { [key: string]: string } = {
-        changePassword: 'ALTERAÇÃO DE SENHA',
-        accessEmail: 'ACESSO AO E-MAIL',
-        accessCanva: 'ACESSO AO CANVA',
-        accessPadlet: 'ACESSO AO PADLET',
-        downloadTeams: 'DOWNLOAD DO TEAMS',
-        downloadInsight: 'DOWNLOAD DO INSIGHT',
-        audioCollection: 'ACERVO DE ÁUDIOS INTEF - YOUTUBE',
-        imageCollection: 'ACERVO DE IMAGENS INTEF - PIXABAY',
-        accessMatific: 'ACESSO AO MATIFIC',
-    };
-    const defaultLinkKeys = [
-      'changePassword', 'accessEmail', 'accessCanva',
-      'accessPadlet', 'downloadTeams', 'downloadInsight',
-      'audioCollection', 'imageCollection', 'accessMatific'
-    ];
-    return defaultLinkKeys.map(key => ({
-        id: generateId(),
-        text: defaultTexts[key] || key.replace(/([A-Z])/g, ' $1').toUpperCase(),
-        url: '#',
-    }));
-};
-
-export const getLinks = (): SidebarLink[] => {
-  try {
-    const linksJson = localStorage.getItem(LINKS_KEY);
-    if (linksJson) {
-      return JSON.parse(linksJson);
-    } else {
-      const defaultLinks = getDefaultLinks();
-      saveLinks(defaultLinks);
-      return defaultLinks;
+export const getLinks = async (): Promise<SidebarLink[]> => {
+    const { data, error } = await supabase
+        .from('sidebar_links')
+        .select('*');
+    
+    if (error) {
+        console.error('Error fetching links:', error);
+        return [];
     }
-  } catch (error) {
-    console.error("Failed to parse links from localStorage", error);
-    const defaultLinks = getDefaultLinks();
-    saveLinks(defaultLinks);
-    return defaultLinks;
-  }
+    return data;
 };
 
-export const saveLinks = (links: SidebarLink[]): void => {
-  localStorage.setItem(LINKS_KEY, JSON.stringify(links));
+export const saveLink = async (link: Partial<SidebarLink>): Promise<SidebarLink> => {
+    const { data, error } = await supabase
+        .from('sidebar_links')
+        .upsert(link)
+        .select()
+        .single();
+    
+    if (error) {
+        console.error('Error saving link:', error);
+        throw error;
+    }
+    return data;
+};
+
+export const deleteLink = async (linkId: string): Promise<void> => {
+    const { error } = await supabase
+        .from('sidebar_links')
+        .delete()
+        .eq('id', linkId);
+
+    if (error) {
+        console.error('Error deleting link:', error);
+        throw error;
+    }
 };
 
 // --- Calendar Events Management ---
 
-export const getEvents = (): CalendarEvent[] => {
-  try {
-    const eventsJson = localStorage.getItem(EVENTS_KEY);
-    return eventsJson ? JSON.parse(eventsJson) : [];
-  } catch (error) {
-    console.error("Failed to parse events from localStorage", error);
-    localStorage.removeItem(EVENTS_KEY);
-    return [];
-  }
+export const getEvents = async (): Promise<CalendarEvent[]> => {
+    const { data, error } = await supabase
+        .from('calendar_events')
+        .select('*');
+    
+    if (error) {
+        console.error('Error fetching events:', error);
+        return [];
+    }
+    return data;
 };
 
-export const saveEvents = (events: CalendarEvent[]): void => {
-  localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+export const saveEvent = async (event: Partial<CalendarEvent>): Promise<CalendarEvent> => {
+    const { data, error } = await supabase
+        .from('calendar_events')
+        .upsert(event)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error saving event:', error);
+        throw error;
+    }
+    return data;
+};
+
+export const deleteEvent = async (eventId: string): Promise<void> => {
+    const { error } = await supabase
+        .from('calendar_events')
+        .delete()
+        .eq('id', eventId);
+    
+    if (error) {
+        console.error('Error deleting event:', error);
+        throw error;
+    }
 };

@@ -19,9 +19,20 @@ import FilePreviewModal from './components/modals/FilePreviewModal';
 import SimulationSetupModal from './components/modals/SimulationSetupModal';
 import Footer from './components/Footer';
 import { useLanguage } from './languageContext';
-import { simpleHash, generateId } from './utils/auth';
-import { getCourses, saveCourses, getUsers, saveUsers, getLinks, saveLinks, getEvents, saveEvents } from './api';
-import { PlusIcon } from './components/icons';
+import { generateId } from './utils/auth';
+import { 
+    getCourses, saveCourse, deleteCourse,
+    getAllUserProfiles, updateUserProfile,
+    getLinks, saveLink, deleteLink,
+    getEvents, saveEvent, deleteEvent,
+    uploadMaterialFile 
+} from './api';
+import { supabase } from './supabaseClient';
+// Fix: Import icons to map iconName string to component
+import { PlusIcon, BookOpenIcon, BeakerIcon, GlobeAltIcon, AcademicCapIcon, PaintBrushIcon, RunningIcon } from './components/icons';
+
+// Fix: Create a map of icon components to resolve from iconName string
+const icons: { [key: string]: React.ComponentType<{ className?: string }> } = { BookOpenIcon, BeakerIcon, GlobeAltIcon, AcademicCapIcon, PaintBrushIcon, RunningIcon };
 
 const isItemVisibleToStudent = (item: { classrooms?: Classroom[], years?: SchoolYear[] }, student: User | null): boolean => {
     if (!student || student.role !== 'student') return true; // always visible to teachers or if no user
@@ -44,6 +55,8 @@ const App: React.FC = () => {
   const [isUserManagementVisible, setIsUserManagementVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [simulationContext, setSimulationContext] = useState<{ year: SchoolYear, classroom: Classroom } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // Modal states
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
@@ -76,30 +89,55 @@ const App: React.FC = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
-    // Load all data on initial mount
-    const allUsers = getUsers();
-    const allCourses = getCourses();
-    const allLinks = getLinks();
-    const allEvents = getEvents();
-    setUsers(allUsers);
-    setCourses(allCourses);
-    setSidebarLinks(allLinks);
-    setCalendarEvents(allEvents);
-
-    try {
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        const user: User = JSON.parse(storedUser);
-        const fullUser = allUsers.find(u => u.id === user.id);
-        if (fullUser && fullUser.isActive) {
-          setCurrentUser(fullUser);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        setIsLoading(true);
+        if (session?.user) {
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+            
+            if (profile && profile.isActive) {
+                setCurrentUser(profile);
+                loadInitialData();
+            } else {
+                setCurrentUser(null);
+                await supabase.auth.signOut();
+            }
+        } else {
+            setCurrentUser(null);
         }
-      }
-    } catch (error) {
-      console.error("Failed to parse user from localStorage", error);
-      localStorage.removeItem('currentUser');
-    }
+        setIsLoading(false);
+    });
+    
+    return () => subscription.unsubscribe();
   }, []);
+
+  const loadInitialData = async () => {
+    try {
+        const [allUsers, coursesFromApi, allLinks, allEvents] = await Promise.all([
+            getAllUserProfiles(),
+            getCourses(),
+            getLinks(),
+            getEvents()
+        ]);
+
+        // Fix: Map iconName string from API to icon component for UI
+        const allCourses: Course[] = coursesFromApi.map(c => ({
+            ...c,
+            icon: icons[c.iconName] || BookOpenIcon,
+        }));
+
+        setUsers(allUsers);
+        setCourses(allCourses);
+        setSidebarLinks(allLinks);
+        setCalendarEvents(allEvents);
+    } catch (error) {
+        console.error("Failed to load initial data", error);
+    }
+  };
+
 
   const isTeacherView = !simulationContext && currentUser?.role === 'teacher';
   
@@ -116,87 +154,60 @@ const App: React.FC = () => {
   }, [currentUser, simulationContext]);
 
 
-  const updateUsers = (updatedUsers: StoredUser[]) => {
-    setUsers(updatedUsers);
-    saveUsers(updatedUsers);
-  }
-
-  const updateCourses = (updatedCourses: Course[]) => {
-    setCourses(updatedCourses);
-    saveCourses(updatedCourses);
-  }
-
-  const updateLinks = (updatedLinks: SidebarLink[]) => {
-    setSidebarLinks(updatedLinks);
-    saveLinks(updatedLinks);
-  }
-  
-  const updateEvents = (updatedEvents: CalendarEvent[]) => {
-    setCalendarEvents(updatedEvents);
-    saveEvents(updatedEvents);
-  };
-
   // --- Auth Handlers ---
-  const handleLogin = (user: User) => {
-    setCurrentUser(user);
-    localStorage.setItem('currentUser', JSON.stringify(user));
-  };
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setCurrentUser(null);
     setSimulationContext(null);
-    localStorage.removeItem('currentUser');
     setSelectedCourse(null);
   };
   
   // --- Profile Update Handler ---
-  const handleSaveProfile = (updatedData: Partial<User>, passwordData?: { current: string, new: string }): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        if (!currentUser) return reject(new Error("No user logged in"));
-        
-        const userToUpdate = users.find(u => u.id === currentUser.id);
-        if (!userToUpdate) return reject(new Error("User not found"));
+  const handleSaveProfile = async (updatedData: Partial<User>, passwordData?: { current: string, new: string }): Promise<void> => {
+      if (!currentUser) throw new Error("No user logged in");
+      
+      // Handle password change
+      if (passwordData?.new) {
+          const { error } = await supabase.auth.updateUser({ password: passwordData.new });
+          if (error) throw new Error(error.message);
+      }
+      
+      const { data: updatedProfile, error: profileError } = await supabase
+          .from('profiles')
+          .update(updatedData)
+          .eq('id', currentUser.id)
+          .select()
+          .single();
 
-        let updatedUser = { ...userToUpdate, ...updatedData };
-        
-        // Handle password change
-        if (passwordData && passwordData.current && passwordData.new) {
-            if (simpleHash(passwordData.current) !== userToUpdate.passwordHash) {
-                return reject(new Error(t('currentPasswordIncorrect')));
-            }
-            updatedUser.passwordHash = simpleHash(passwordData.new);
-        }
-        
-        const updatedUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
-        updateUsers(updatedUsers);
-
-        const { passwordHash, ...userForSession } = updatedUser;
-        setCurrentUser(userForSession);
-        localStorage.setItem('currentUser', JSON.stringify(userForSession));
-        
-        resolve();
-    });
+      if (profileError) throw profileError;
+      
+      setCurrentUser(updatedProfile);
   }
 
 
   // --- User Management Handlers ---
-  const handleUpdateUser = (updatedUser: StoredUser) => {
-    const updatedUsers = users.map(u => u.id === updatedUser.id ? updatedUser : u);
-    updateUsers(updatedUsers);
+  const handleUpdateUser = async (updatedUser: StoredUser) => {
+    await updateUserProfile(updatedUser.id, updatedUser);
+    setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
   }
-  const handleDeleteUser = (userId: string) => {
-    const updatedUsers = users.filter(u => u.id !== userId);
-    updateUsers(updatedUsers);
+  const handleDeleteUser = async (userId: string) => {
+    // Note: Deleting users should be handled with care, maybe just deactivating.
+    // Supabase user deletion is more complex. For now, we just deactivate.
+    const userToDeactivate = users.find(u => u.id === userId);
+    if(userToDeactivate) {
+        await handleUpdateUser({ ...userToDeactivate, isActive: false });
+    }
   }
 
   // --- Course CRUD Handlers ---
-  const handleSaveCourse = (courseData: Omit<Course, 'id' | 'teacher' | 'teacherId' | 'content' | 'status' | 'progress'> & { classrooms?: Classroom[], years?: SchoolYear[] }) => {
+  const handleSaveCourse = async (courseData: Omit<Course, 'id' | 'teacher' | 'teacherId' | 'content' | 'status' | 'progress' | 'iconName'> & { classrooms?: Classroom[], years?: SchoolYear[], icon: any }) => {
     if (!currentUser) return;
+
+    let courseToSave: Partial<Course>;
     if (editingCourse) { // Update
-      const updatedCourses = courses.map(c => c.id === editingCourse.id ? { ...c, ...courseData } : c);
-      updateCourses(updatedCourses);
+      courseToSave = { ...editingCourse, ...courseData, iconName: courseData.icon.name };
     } else { // Create
-      const newCourse: Course = {
+      courseToSave = {
         ...courseData,
         id: generateId(),
         teacher: currentUser.name,
@@ -206,210 +217,203 @@ const App: React.FC = () => {
         progress: 0,
         classrooms: courseData.classrooms || [],
         years: courseData.years || [],
+        iconName: courseData.icon.name,
       };
-      updateCourses([...courses, newCourse]);
     }
+    
+    // @ts-ignore
+    delete courseToSave.icon; // Don't save component to DB
+    
+    const savedCourseFromApi = await saveCourse(courseToSave);
+
+    // Fix: Reconstruct the full course object with the icon component for local state
+    const saved: Course = {
+      ...savedCourseFromApi,
+      icon: icons[savedCourseFromApi.iconName] || BookOpenIcon,
+    };
+
+    if (editingCourse) {
+        setCourses(courses.map(c => c.id === saved.id ? saved : c));
+    } else {
+        setCourses([...courses, saved]);
+    }
+
     setIsCourseModalOpen(false);
     setEditingCourse(null);
   }
-  const handleDeleteCourse = (course: Course) => {
+  const handleDeleteCourse = async (course: Course) => {
     if (window.confirm(t('confirmDeleteCourseMessage'))) {
-      const updatedCourses = courses.filter(c => c.id !== course.id);
-      updateCourses(updatedCourses);
+      await deleteCourse(course.id);
+      setCourses(courses.filter(c => c.id !== course.id));
     }
   }
 
   // --- Course Content CRUD Handlers (Immutable Updates) ---
-  const handleSaveModule = (moduleData: Omit<CourseModule, 'id' | 'categories'>) => {
+  const handleSaveModule = async (moduleData: Omit<CourseModule, 'id' | 'categories'>) => {
     if (!selectedCourse) return;
-    const newCourses = courses.map(course => {
-      if (course.id !== selectedCourse.id) return course;
-  
-      let newContent;
-      if (editingModule) { // Update
-        newContent = course.content.map(m =>
-          m.id === editingModule.id
-            ? { ...m, ...moduleData }
-            : m
-        );
-      } else { // Create
+    
+    let updatedCourse: Course;
+    if (editingModule) { // Update
+        const newContent = selectedCourse.content.map(m => m.id === editingModule.id ? { ...m, ...moduleData } : m);
+        updatedCourse = { ...selectedCourse, content: newContent };
+    } else { // Create
         const newModule: CourseModule = { ...moduleData, id: generateId(), categories: [], classrooms: moduleData.classrooms || [], years: moduleData.years || [] };
-        newContent = [...course.content, newModule];
-      }
-      return { ...course, content: newContent };
-    });
+        updatedCourse = { ...selectedCourse, content: [...selectedCourse.content, newModule] };
+    }
   
-    const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-    if (updatedCourse) setSelectedCourse(updatedCourse);
-  
-    updateCourses(newCourses);
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
     setIsModuleModalOpen(false);
     setEditingModule(null);
   };
   
-  const handleDeleteModule = (moduleId: string) => {
+  const handleDeleteModule = async (moduleId: string) => {
     if (!selectedCourse) return;
-    const newCourses = courses.map(course => {
-      if (course.id !== selectedCourse.id) return course;
-      const newContent = course.content.filter(m => m.id !== moduleId);
-      return { ...course, content: newContent };
-    });
-  
-    const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-    if (updatedCourse) setSelectedCourse(updatedCourse);
-    updateCourses(newCourses);
+    const newContent = selectedCourse.content.filter(m => m.id !== moduleId);
+    const updatedCourse = { ...selectedCourse, content: newContent };
+    
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
   };
 
-  const handleSaveCategory = (categoryData: Omit<StudyMaterialCategory, 'id' | 'materials'>) => {
+  const handleSaveCategory = async (categoryData: Omit<StudyMaterialCategory, 'id' | 'materials'>) => {
     if (!selectedCourse || !parentId) return; // parentId is moduleId here
-    const newCourses = courses.map(course => {
-        if (course.id !== selectedCourse.id) return course;
-
-        const newContent = course.content.map(module => {
-            if (module.id !== parentId) return module;
-            
-            let newCategories;
-            if (editingCategory) { // Update
-                newCategories = module.categories.map(cat => 
-                    cat.id === editingCategory.id 
-                    ? { ...cat, ...categoryData }
-                    : cat
-                );
-            } else { // Create
-                const newCategory: StudyMaterialCategory = { ...categoryData, id: generateId(), materials: [], classrooms: categoryData.classrooms || [], years: categoryData.years || [] };
-                newCategories = [...module.categories, newCategory];
-            }
-            return { ...module, categories: newCategories };
-        });
-        return { ...course, content: newContent };
+    
+    const newContent = selectedCourse.content.map(module => {
+        if (module.id !== parentId) return module;
+        let newCategories;
+        if (editingCategory) { // Update
+            newCategories = module.categories.map(cat => cat.id === editingCategory.id ? { ...cat, ...categoryData } : cat);
+        } else { // Create
+            const newCategory: StudyMaterialCategory = { ...categoryData, id: generateId(), materials: [], classrooms: categoryData.classrooms || [], years: categoryData.years || [] };
+            newCategories = [...module.categories, newCategory];
+        }
+        return { ...module, categories: newCategories };
     });
 
-    const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-    if (updatedCourse) setSelectedCourse(updatedCourse);
+    const updatedCourse = { ...selectedCourse, content: newContent };
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
     
-    updateCourses(newCourses);
     setIsCategoryModalOpen(false);
     setEditingCategory(null);
     setParentId(null);
   }
 
-  const handleDeleteCategory = (moduleId: string, categoryId: string) => {
+  const handleDeleteCategory = async (moduleId: string, categoryId: string) => {
     if (!selectedCourse) return;
-     const newCourses = courses.map(course => {
-        if (course.id !== selectedCourse.id) return course;
-
-        const newContent = course.content.map(module => {
-            if (module.id !== moduleId) return module;
-            const newCategories = module.categories.filter(cat => cat.id !== categoryId);
-            return { ...module, categories: newCategories };
-        });
-        return { ...course, content: newContent };
+    const newContent = selectedCourse.content.map(module => {
+        if (module.id !== moduleId) return module;
+        const newCategories = module.categories.filter(cat => cat.id !== categoryId);
+        return { ...module, categories: newCategories };
     });
 
-    const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-    if (updatedCourse) setSelectedCourse(updatedCourse);
-    updateCourses(newCourses);
+    const updatedCourse = { ...selectedCourse, content: newContent };
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
   }
 
-  const handleSaveMaterial = (materialData: Omit<StudyMaterial, 'id'> & { id?: string }): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      try {
-        if (!selectedCourse || !parentId) {
-          return reject(new Error("Course or parent not selected"));
-        }
-  
-        const newCourses = courses.map(course => {
-          if (course.id !== selectedCourse.id) return course;
-  
-          const newContent = course.content.map(module => {
-            const newCategories = module.categories.map(category => {
-              if (category.id !== parentId) return category;
-  
-              let newMaterials;
-              if (editingMaterial) { // Update
-                newMaterials = category.materials.map(mat =>
-                  mat.id === editingMaterial.id ? { ...mat, ...materialData } : mat
-                );
-              } else { // Create
-                const { id, ...restOfData } = materialData;
+  const handleSaveMaterial = async (materialData: Omit<StudyMaterial, 'id'> & { id?: string }): Promise<void> => {
+    if (!selectedCourse || !parentId) {
+      throw new Error("Course or parent not selected");
+    }
+
+    let materialToSave = { ...materialData };
+
+    // Handle file upload to Supabase Storage
+    if (materialToSave.type === 'file' && materialToSave.content.startsWith('data:')) {
+        const publicUrl = await uploadMaterialFile(materialToSave as Omit<StudyMaterial, 'id'>);
+        materialToSave.content = publicUrl;
+    }
+
+    const newContent = selectedCourse.content.map(module => {
+        const newCategories = module.categories.map(category => {
+            if (category.id !== parentId) return category;
+
+            let newMaterials;
+            if (editingMaterial) { // Update
+                newMaterials = category.materials.map(mat => mat.id === editingMaterial.id ? { ...mat, ...materialToSave } : mat);
+            } else { // Create
+                const { id, ...restOfData } = materialToSave;
                 const newMaterial: StudyMaterial = { ...restOfData as Omit<StudyMaterial, 'id'>, id: generateId(), classrooms: materialData.classrooms || [], years: materialData.years || [] };
                 newMaterials = [...(category.materials || []), newMaterial];
-              }
-              return { ...category, materials: newMaterials };
-            });
-            return { ...module, categories: newCategories };
-          });
-          return { ...course, content: newContent };
+            }
+            return { ...category, materials: newMaterials };
         });
-  
-        const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-        if (updatedCourse) setSelectedCourse(updatedCourse);
-  
-        updateCourses(newCourses);
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
+        return { ...module, categories: newCategories };
     });
+    
+    const updatedCourse = { ...selectedCourse, content: newContent };
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
   };
 
-   const handleDeleteMaterial = (categoryId: string, materialId: string) => {
+   const handleDeleteMaterial = async (categoryId: string, materialId: string) => {
     if (!selectedCourse) return;
-     const newCourses = courses.map(course => {
-        if (course.id !== selectedCourse.id) return course;
-        
-        const newContent = course.content.map(module => {
-            const newCategories = module.categories.map(category => {
-                if (category.id !== categoryId) return category;
-                const newMaterials = category.materials.filter(mat => mat.id !== materialId);
-                return { ...category, materials: newMaterials };
-            });
-            return { ...module, categories: newCategories };
+    const newContent = selectedCourse.content.map(module => {
+        const newCategories = module.categories.map(category => {
+            if (category.id !== categoryId) return category;
+            const newMaterials = category.materials.filter(mat => mat.id !== materialId);
+            return { ...category, materials: newMaterials };
         });
-        return { ...course, content: newContent };
+        return { ...module, categories: newCategories };
     });
 
-    const updatedCourse = newCourses.find(c => c.id === selectedCourse.id);
-    if (updatedCourse) setSelectedCourse(updatedCourse);
-    updateCourses(newCourses);
+    const updatedCourse = { ...selectedCourse, content: newContent };
+    const saved = await saveCourse(updatedCourse);
+    const savedWithIcon: Course = { ...saved, icon: icons[saved.iconName] || BookOpenIcon };
+    setCourses(courses.map(c => c.id === savedWithIcon.id ? savedWithIcon : c));
+    setSelectedCourse(savedWithIcon);
   }
   
   // --- Sidebar Link Handlers ---
-  const handleSaveSidebarLink = (linkData: Omit<SidebarLink, 'id'>) => {
-      if (editingSidebarLink) { // Update
-          const updatedLinks = sidebarLinks.map(l => l.id === editingSidebarLink.id ? { ...l, ...linkData } : l);
-          updateLinks(updatedLinks);
-      } else { // Create
-          const newLink: SidebarLink = { ...linkData, id: generateId(), classrooms: linkData.classrooms || [], years: linkData.years || [] };
-          updateLinks([...sidebarLinks, newLink]);
+  const handleSaveSidebarLink = async (linkData: Omit<SidebarLink, 'id'>) => {
+      let linkToSave: Partial<SidebarLink> = editingSidebarLink ? { ...editingSidebarLink, ...linkData } : { ...linkData, id: generateId() };
+      const saved = await saveLink(linkToSave);
+      
+      if (editingSidebarLink) {
+          setSidebarLinks(sidebarLinks.map(l => l.id === saved.id ? saved : l));
+      } else {
+          setSidebarLinks([...sidebarLinks, saved]);
       }
       setIsSidebarLinkModalOpen(false);
       setEditingSidebarLink(null);
   }
 
-  const handleDeleteSidebarLink = (linkId: string) => {
-      const updatedLinks = sidebarLinks.filter(l => l.id !== linkId);
-      updateLinks(updatedLinks);
+  const handleDeleteSidebarLink = async (linkId: string) => {
+      await deleteLink(linkId);
+      setSidebarLinks(sidebarLinks.filter(l => l.id !== linkId));
   }
   
   // --- Calendar Event Handlers ---
-    const handleSaveEvent = (eventData: Omit<CalendarEvent, 'id'>) => {
-        if (editingEvent) { // Update
-            const updatedEvents = calendarEvents.map(e => e.id === editingEvent.id ? { ...e, ...eventData } : e);
-            updateEvents(updatedEvents);
-        } else { // Create
-            const newEvent: CalendarEvent = { ...eventData, id: generateId(), classrooms: eventData.classrooms || [], years: eventData.years || [] };
-            updateEvents([...calendarEvents, newEvent]);
+    const handleSaveEvent = async (eventData: Omit<CalendarEvent, 'id'>) => {
+        let eventToSave: Partial<CalendarEvent> = editingEvent ? { ...editingEvent, ...eventData } : { ...eventData, id: generateId() };
+        const saved = await saveEvent(eventToSave);
+
+        if (editingEvent) {
+            setCalendarEvents(calendarEvents.map(e => e.id === saved.id ? saved : e));
+        } else {
+            setCalendarEvents([...calendarEvents, saved]);
         }
         setIsEventModalOpen(false);
         setEditingEvent(null);
         setSelectedDateForEvent(null);
     };
 
-    const handleDeleteEvent = (eventId: string) => {
+    const handleDeleteEvent = async (eventId: string) => {
         if (window.confirm(t('confirmDeleteEvent'))) {
-            const updatedEvents = calendarEvents.filter(e => e.id !== eventId);
-            updateEvents(updatedEvents);
+            await deleteEvent(eventId);
+            setCalendarEvents(calendarEvents.filter(e => e.id !== eventId));
         }
     };
 
@@ -462,9 +466,16 @@ const App: React.FC = () => {
   const visibleSidebarLinks = useMemo(() => sidebarLinks.filter(link => isItemVisibleToStudent(link, viewingUser)), [sidebarLinks, viewingUser]);
   const visibleCalendarEvents = useMemo(() => calendarEvents.filter(event => isItemVisibleToStudent(event, viewingUser)), [calendarEvents, viewingUser]);
 
+  if (isLoading) {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-blue-500"></div>
+        </div>
+    );
+  }
 
   if (!currentUser) {
-    return <Auth onLoginSuccess={handleLogin} />;
+    return <Auth />;
   }
   
   const getDashboardTitle = () => {
@@ -508,7 +519,7 @@ const App: React.FC = () => {
                     <CourseCard key={course.id} course={course} onClick={handleSelectCourse} 
                       isTeacherOwner={isTeacherView && course.teacherId === currentUser.id}
                       onEdit={() => { setEditingCourse(course); setIsCourseModalOpen(true); }}
-                      onDelete={handleDeleteCourse}
+                      onDelete={() => handleDeleteCourse(course)}
                     />
                   ))}
                 </div>
