@@ -190,6 +190,10 @@ export const translations = {
     visibleToClassrooms: 'Visível para as Salas',
     visibleToYears: 'Visível para os Anos',
     allYears: 'Todos os Anos',
+
+    // Footer
+    copyrightNotice: '© {year} Raphael Costa. Todos os direitos reservados.',
+    madeFor: 'Feito para o site Matéria para Você.',
   },
   'EN': {
     // Auth
@@ -376,6 +380,10 @@ export const translations = {
     visibleToClassrooms: 'Visible to Classrooms',
     visibleToYears: 'Visible to Years',
     allYears: 'All Years',
+
+    // Footer
+    copyrightNotice: '© {year} Raphael Costa. All rights reserved.',
+    madeFor: 'Made for the Matéria para Você website.',
   },
   'ES': {
     // Auth
@@ -562,6 +570,10 @@ export const translations = {
     visibleToClassrooms: 'Visible para las Clases',
     visibleToYears: 'Visible para los Años',
     allYears: 'Todos los Años',
+
+    // Footer
+    copyrightNotice: '© {year} Raphael Costa. Todos los derechos reservados.',
+    madeFor: 'Hecho para el sitio web Matéria para Você.',
   }
 };
 

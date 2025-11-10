@@ -17,6 +17,7 @@ import ProfileModal from './components/modals/ProfileModal';
 import SimulationBanner from './components/SimulationBanner';
 import FilePreviewModal from './components/modals/FilePreviewModal';
 import SimulationSetupModal from './components/modals/SimulationSetupModal';
+import Footer from './components/Footer';
 import { useLanguage } from './languageContext';
 import { getUsers, saveUsers, simpleHash } from './utils/auth';
 import { getCourses, saveCourses } from './utils/course';
@@ -476,7 +477,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans text-white">
+    <div className="min-h-screen font-sans text-white flex flex-col">
       {simulationContext && <SimulationBanner onExit={handleEndSimulation} simulationContext={simulationContext} />}
       <Header 
         user={currentUser}
@@ -488,7 +489,7 @@ const App: React.FC = () => {
         isTeacherView={isTeacherView}
         onOpenSimulationModal={() => setIsSimulationModalOpen(true)}
       />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
         {!selectedCourse ? (
           <div className="flex flex-col lg:flex-row gap-8">
             <main className="flex-1 py-4 sm:py-6 lg:py-8">
@@ -647,6 +648,7 @@ const App: React.FC = () => {
             onStart={handleStartSimulation}
         />
     )}
+    <Footer />
     </div>
   );
 };
