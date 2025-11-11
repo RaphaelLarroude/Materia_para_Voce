@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon, LinkIcon, PencilIcon, TrashIcon, PlusIcon, UserGroupIcon, AcademicCapIcon } from './icons';
+import { ChevronLeftIcon, ChevronRightIcon, LinkIcon, PencilIcon, TrashIcon, PlusIcon, UserGroupIcon, AcademicCapIcon, DollarSignIcon } from './icons';
 import { useLanguage } from '../languageContext';
 import { localeMap } from '../i18n';
 import { SidebarLink as SidebarLinkType, CalendarEvent } from '../types';
@@ -181,6 +181,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onShowCalendar, links, isTeacher, onA
                 )}
             </div>
             <nav className="space-y-1">
+                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="flex items-center text-sm text-gray-200 hover:text-blue-400 py-1.5 transition-colors group flex-grow min-w-0">
+                    <div className="w-7 h-7 mr-3 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500 transition-colors">
+                      <DollarSignIcon className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="truncate font-medium">{t('apiPricing')}</span>
+                </a>
+
                 {links.map(link => (
                     <SidebarLink 
                         key={link.id} 

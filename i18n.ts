@@ -97,6 +97,7 @@ export const translations = {
     addLink: 'Adicionar Novo Link',
     label: 'Rótulo',
     url: 'URL',
+    apiPricing: 'Preços da API Gemini',
 
     // Full Calendar View
     eventsFor: 'Eventos para',
@@ -289,6 +290,7 @@ export const translations = {
     addLink: 'Add New Link',
     label: 'Label',
     url: 'URL',
+    apiPricing: 'Gemini API Pricing',
 
     // Full Calendar View
     eventsFor: 'Events for',
@@ -479,6 +481,7 @@ export const translations = {
     addLink: 'Añadir Nuevo Enlace',
     label: 'Etiqueta',
     url: 'URL',
+    apiPricing: 'Precios de la API de Gemini',
 
     // Full Calendar View
     eventsFor: 'Eventos para',
