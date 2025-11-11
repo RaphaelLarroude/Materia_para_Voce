@@ -19,7 +19,7 @@ const createDefaultCourses = (): Course[] => {
             {
                 id: generateId(),
                 title: '2025',
-                illustrationUrl: 'https://images.pexels.com/photos/276267/pexels-photo-276267.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+                illustrationUrl: 'https://images.pexels.com/photos/4145153/pexels-photo-4145153.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
                 classrooms: [],
                 years: [],
                 categories: [
