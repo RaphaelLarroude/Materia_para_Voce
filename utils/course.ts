@@ -4,40 +4,6 @@ import { generateId } from './auth';
 const COURSES_KEY = 'materiaParaVoce_courses';
 
 const createDefaultCourses = (): Course[] => {
-    const fileContent = `PRESENT PERFECT
-
-POSITIVE
-I + HAVE + PAST PARTICIPLE (3a coluna)
-SHE/HE + HAS + PAST PARTICIPLE
-
-NEGATIVE
-I + HAVEN'T/HAVE NOT + PAST PARTICIPLE (3a coluna)
-SHE/HE + HASN'T/HAS NOT + PAST PARTICIPLE
-
-INTERROGATIVE
-HAVE + YOU + PAST PARTICIPLE + ? (3a coluna)
-HAS + SHE/HE + PAST PARTICIPLE + ?
-
-O simple present usamos para expressar acoes ou situacoes que comecaram no passado e continuam no prsente ou que tem uma consequencia no presente.
-
----
-
-PRESENT PERFECT X SIMPLE PAST
-
-SIMPLE PAST
-THE SIMPLE PAST IS A FINISHED PAST FORM
-EXAMPLE:
-I ATE PASTA YESTERDAY
-HE WASHED THE CAR TWO WEEKS AGO
-
-PRESENT PERFECT
-THE PRESENT PERFECT IS A PAST FORM THAT STARTED IN THE PAST AND CONTINUED IN THE FUTURE OR IT HAS A FUTURE CONSEQUENCE
-EXAMPLE:
-I HAVE MET ANA YESTERDAY
-HE HAS EATEN BREAD TWO DAYS AGO`;
-    
-    const base64Content = btoa(fileContent);
-
     const inglesCourse: Course = {
         id: generateId(),
         title: 'Inglês',
@@ -67,10 +33,8 @@ HE HAS EATEN BREAD TWO DAYS AGO`;
                             {
                                 id: generateId(),
                                 title: 'Estudo para PT - Ing - 3 tri - 2025',
-                                type: 'file',
-                                content: `data:text/plain;base64,${base64Content}`,
-                                fileName: 'Estudo_PT_Ing_3_tri_2025.txt',
-                                fileType: 'text/plain',
+                                type: 'link',
+                                content: "https://1drv.ms/b/c/99af5b4d952510d4/Ec9mU8BRqENJswpLfoTByh8BbBbYza7mBJh-_yAHwl-AVQ?e=1lPvUZ",
                                 classrooms: [],
                                 years: [],
                             }
