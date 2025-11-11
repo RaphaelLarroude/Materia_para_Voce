@@ -10,7 +10,7 @@ const createDefaultCourses = (): Course[] => {
         teacher: 'Raphael Costa',
         teacherId: 'rapha-admin-id',
         icon: 'AcademicCapIcon',
-        imageUrl: 'https://images.pexels.com/photos/209905/pexels-photo-209905.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        imageUrl: 'https://images.pexels.com/photos/672532/pexels-photo-672532.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         status: 'Não iniciado',
         progress: 0,
         classrooms: [],
