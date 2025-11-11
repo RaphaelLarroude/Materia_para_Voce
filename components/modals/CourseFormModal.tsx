@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Course, Classroom, SchoolYear } from '../../types';
 import { useLanguage } from '../../languageContext';
-import { XIcon, BookOpenIcon, BeakerIcon, GlobeAltIcon, AcademicCapIcon, PaintBrushIcon, RunningIcon, PhotoIcon } from '../icons';
+import { XIcon, PhotoIcon, IconMap, IconName } from '../icons';
 import { fileToBase64 } from '../../utils/file';
 import ClassroomSelector from '../ClassroomSelector';
 import YearSelector from '../YearSelector';
@@ -13,13 +13,12 @@ interface CourseFormModalProps {
   courseToEdit: Course | null;
 }
 
-const icons = { BookOpenIcon, BeakerIcon, GlobeAltIcon, AcademicCapIcon, PaintBrushIcon, RunningIcon };
-const iconNames = Object.keys(icons) as (keyof typeof icons)[];
+const iconNames = Object.keys(IconMap) as IconName[];
 
 const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSave, courseToEdit }) => {
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState(''); // Holds data URL
-  const [iconName, setIconName] = useState<keyof typeof icons>(iconNames[0]);
+  const [iconName, setIconName] = useState<IconName>(iconNames[0]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [years, setYears] = useState<SchoolYear[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,10 +33,7 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
       setImageUrl(courseToEdit.imageUrl);
       setClassrooms(courseToEdit.classrooms || []);
       setYears(courseToEdit.years || []);
-      const name = (Object.keys(icons) as (keyof typeof icons)[]).find(
-        (key) => icons[key] === courseToEdit.icon
-      );
-      if (name) setIconName(name);
+      setIconName(courseToEdit.icon as IconName);
     } else {
       setTitle('');
       setImageUrl('');
@@ -68,7 +64,7 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
     }
     setIsLoading(true);
     setTimeout(() => {
-      onSave({ title, imageUrl, icon: icons[iconName], classrooms, years });
+      onSave({ title, imageUrl, icon: iconName, classrooms, years });
       setIsLoading(false);
     }, 500);
   };
@@ -111,7 +107,7 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
           </div>
           <div>
             <label htmlFor="course-icon" className="block text-sm font-medium text-gray-300">{t('courseIcon')}</label>
-            <select id="course-icon" value={iconName} onChange={e => setIconName(e.target.value as keyof typeof icons)}
+            <select id="course-icon" value={iconName} onChange={e => setIconName(e.target.value as IconName)}
                     className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="" disabled>{t('selectIcon')}</option>
                 {iconNames.map(name => <option key={name} value={name}>{name.replace('Icon', '')}</option>)}

@@ -53,7 +53,7 @@ export interface Course {
   title: string;
   teacher: string;
   teacherId: string;
-  icon: ComponentType<{ className?: string }>;
+  icon: string;
   content: CourseModule[];
   imageUrl: string;
   status: string;

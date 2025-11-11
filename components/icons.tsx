@@ -42,6 +42,31 @@ export const AcademicCapIcon: React.FC<{ className?: string }> = ({ className })
   </svg>
 );
 
+export const PaintBrushIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0-2.5c-1.12.34-2.29.6-3.5.75m3.5-.75c1.12-.34 2.29-.6 3.5-.75m-3.5.75V9m0 2.5a2.5 2.5 0 015 0V14m-5-2.5a2.5 2.5 0 00-5 0V14m12.5-5a2.5 2.5 0 010 5" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+export const RunningIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M13 17l-4-4m0 0l-4 4m4-4V3" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
+  </svg>
+);
+
+export const IconMap = {
+    BookOpenIcon,
+    BeakerIcon,
+    GlobeAltIcon,
+    AcademicCapIcon,
+    PaintBrushIcon,
+    RunningIcon,
+};
+export type IconName = keyof typeof IconMap;
+
+
 export const DocumentIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -100,20 +125,6 @@ export const LinkIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
     </svg>
-);
-
-export const PaintBrushIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0-2.5c-1.12.34-2.29.6-3.5.75m3.5-.75c1.12-.34 2.29-.6 3.5-.75m-3.5.75V9m0 2.5a2.5 2.5 0 015 0V14m-5-2.5a2.5 2.5 0 00-5 0V14m12.5-5a2.5 2.5 0 010 5" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-
-export const RunningIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M13 17l-4-4m0 0l-4 4m4-4V3" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
-  </svg>
 );
 
 export const BellIcon: React.FC<{ className?: string }> = ({ className }) => (
