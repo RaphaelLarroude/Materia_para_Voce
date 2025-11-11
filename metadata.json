@@ -1,5 +1,5 @@
 {
   "name": "Matéria para Você",
-  "description": "Uma plataforma de aprendizado inspirada no Moodle, onde os alunos podem acessar o conteúdo do curso postado pelos professores em uma interface elegante com efeito de 'Liquid Glass'.",
+  "description": "Uma plataforma de aprendizado inspirada no Moodle, onde os alunos podem acessar o conteúdo do curso postado pelos professores.",
   "requestFramePermissions": []
 }

@@ -3,7 +3,7 @@ import { User } from '../types';
 import Auth from './Auth';
 import Footer from './Footer';
 import { useLanguage } from '../languageContext';
-import { BookOpenIcon, AcademicCapIcon, ClockIcon, PaintBrushIcon } from './icons';
+import { BookOpenIcon, AcademicCapIcon, ClockIcon } from './icons';
 
 interface LandingPageProps {
   onLoginSuccess: (user: User) => void;
@@ -64,7 +64,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
           </div>
           
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <FeatureCard icon={<BookOpenIcon className="w-8 h-8 text-white"/>} title="Gestão de Cursos">
                     Para professores: crie e organize cursos, módulos e materiais com total controle de visibilidade.
                 </FeatureCard>
@@ -73,9 +73,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                 </FeatureCard>
                 <FeatureCard icon={<ClockIcon className="w-8 h-8 text-white"/>} title="Calendário Integrado">
                     Acompanhe provas, entregas de trabalhos e eventos escolares de forma visual e nunca perca um prazo.
-                </FeatureCard>
-                <FeatureCard icon={<PaintBrushIcon className="w-8 h-8 text-white"/>} title="Interface 'Liquid Glass'">
-                    Desfrute de uma experiência de usuário única com um design moderno que é tão bonito quanto funcional.
                 </FeatureCard>
             </div>
           </div>
