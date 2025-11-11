@@ -78,13 +78,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
           </div>
           
            <div className="mt-16 max-w-3xl w-full mx-auto">
-             <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6">
-              <p className="text-lg text-gray-100 text-center mb-2">
-                MATÉRIA PARA VOCÊ é um projeto cujo objetivo é ensinar a matéria escolar para os alunos, para aprenderem o conteúdo de maneira mais fácil, através de um conjunto de materiais diversos, onde há a matéria resumida, chamado de Roteiro de Estudos.
-              </p>
-              <p className="text-lg text-gray-100 text-center">
-                Nós visamos ajudar todos os alunos a estudarem e entenderem o conteúdo, através do nosso estudo.
-              </p>
+             <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+                <h2 className="text-2xl font-bold text-center text-blue-300 mb-4">Nossa Missão</h2>
+                <p className="text-lg text-gray-100 text-center leading-relaxed mb-4">
+                    O 'Matéria para Você' é uma plataforma educacional dedicada a simplificar o aprendizado. Nosso objetivo é transformar a maneira como os alunos interagem com o conteúdo escolar, tornando o estudo mais acessível, organizado e eficiente.
+                </p>
+                <p className="text-lg text-gray-100 text-center leading-relaxed">
+                    Através dos nossos 'Roteiros de Estudos', oferecemos materiais de apoio e recursos diversos em um único local, capacitando cada aluno a dominar as matérias e alcançar seu pleno potencial acadêmico.
+                </p>
             </div>
           </div>
 
