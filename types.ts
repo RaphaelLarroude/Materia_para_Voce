@@ -54,7 +54,6 @@ export interface Course {
   teacher: string;
   teacherId: string;
   icon: ComponentType<{ className?: string }>;
-  iconName: string;
   content: CourseModule[];
   imageUrl: string;
   status: string;

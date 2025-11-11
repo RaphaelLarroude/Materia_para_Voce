@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../languageContext';
-import { Classroom, SchoolYear } from '../types';
-import { supabase } from '../supabaseClient';
+import { User, Classroom, SchoolYear, UserRole, StoredUser } from '../types';
+import { getUsers, saveUsers, simpleHash, generateId } from '../utils/auth';
 
-const Auth: React.FC = () => {
+interface AuthProps {
+  onLoginSuccess: (user: User) => void;
+}
+
+const Auth: React.FC<AuthProps> = ({ onLoginSuccess }) => {
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,44 +30,70 @@ const Auth: React.FC = () => {
     setYear('');
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
-    try {
+    setTimeout(() => {
+      const users = getUsers();
+
       if (authMode === 'signup') {
-        if (!year) throw new Error(t('yearRequired'));
-        if (!classroom) throw new Error(t('classroomRequired'));
+        if (!year) {
+          setError(t('yearRequired'));
+          setIsLoading(false);
+          return;
+        }
+        if (!classroom) {
+          setError(t('classroomRequired'));
+          setIsLoading(false);
+          return;
+        }
+        if (password.length < 6) {
+          setError(t('passwordTooShort'));
+          setIsLoading(false);
+          return;
+        }
+        const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (existingUser) {
+          setError(t('emailInUse'));
+          setIsLoading(false);
+          return;
+        }
+
+        const newUser: StoredUser = {
+          id: generateId(),
+          name,
+          email,
+          role: 'student',
+          isActive: true,
+          passwordHash: simpleHash(password),
+          year: year as SchoolYear,
+          classroom: classroom as Classroom,
+        };
         
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    name,
-                    role: 'student',
-                    isActive: true,
-                    year,
-                    classroom,
-                }
-            }
-        });
-        if (error) throw error;
-        // Supabase onAuthStateChange will handle login
+        saveUsers([...users, newUser]);
+        const { passwordHash, ...userForSession } = newUser;
+        onLoginSuccess(userForSession);
+
       } else { // Login mode
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        if (error) throw error;
-        // Supabase onAuthStateChange will handle login
+        const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (!user || user.passwordHash !== simpleHash(password)) {
+          setError(t('invalidCredentials'));
+          setIsLoading(false);
+          return;
+        }
+        if (!user.isActive) {
+            setError(t('accountDeactivated'));
+            setIsLoading(false);
+            return;
+        }
+        const { passwordHash, ...userForSession } = user;
+        onLoginSuccess(userForSession);
       }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
-    } finally {
-        setIsLoading(false);
-    }
+      
+      setIsLoading(false);
+    }, 1000);
   };
 
   const switchMode = () => {
