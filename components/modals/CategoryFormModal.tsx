@@ -74,12 +74,12 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ isOpen, onClose, 
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="cat-title" className="block text-sm font-medium text-gray-300">{t('categoryTitle')}</label>
+            <label htmlFor="cat-title" className="block text-sm font-medium text-gray-200">{t('categoryTitle')}</label>
             <input id="cat-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
            <div>
-            <label className="block text-sm font-medium text-gray-300">{t('categoryIllustration')}</label>
+            <label className="block text-sm font-medium text-gray-200">{t('categoryIllustration')}</label>
             <div className="mt-1">
                 {illustrationUrl ? (
                     <div className="relative group">

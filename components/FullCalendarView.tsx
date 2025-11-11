@@ -88,7 +88,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
             </div>
           </header>
 
-          <div className="grid grid-cols-7 text-center text-xs text-gray-400 mb-2">
+          <div className="grid grid-cols-7 text-center text-xs text-gray-200 mb-2">
             {weekDays.map(day => <span key={day}>{day}</span>)}
           </div>
           <div className="grid grid-cols-7 flex-grow">
@@ -101,7 +101,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                       w-10 h-10 flex items-center justify-center rounded-full mx-auto transition-colors text-sm
                       ${isSelected(day) ? 'bg-white text-gray-900 font-bold' : 'hover:bg-white/20'}
                       ${isToday(day) && !isSelected(day) ? 'border-2 border-blue-400' : ''}
-                      ${!isToday(day) && !isSelected(day) ? 'text-gray-200' : ''}
+                      ${!isToday(day) && !isSelected(day) ? 'text-white' : ''}
                     `}
                   >
                     {day}
@@ -119,7 +119,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
         
         <div className="w-full md:w-2/5 bg-black/20 p-6 flex flex-col border-t md:border-t-0 md:border-l border-white/20">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg">
+              <h3 className="font-bold text-lg text-white">
                 {t('eventsFor')} <span className="text-blue-300">{selectedDate.toLocaleDateString(localeMap[language], { day: '2-digit', month: 'long' })}</span>
               </h3>
                {isTeacher && (
@@ -141,9 +141,9 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                     return (
                       <li key={event.id} className={`relative group p-4 rounded-lg border-l-4 ${eventColorClasses[event.color].replace('bg', 'border')} bg-white/5`}>
                         <p className="font-semibold text-white">{event.title}</p>
-                        {event.description && <p className="text-sm text-gray-300 mt-1 break-words">{event.description}</p>}
+                        {event.description && <p className="text-sm text-gray-200 mt-1 break-words">{event.description}</p>}
                         <div className="flex justify-between items-center mt-2">
-                            <p className="text-xs text-gray-300">{event.course}</p>
+                            <p className="text-xs text-gray-200">{event.course}</p>
                             {isTeacher && (
                                 <div className="flex flex-col items-end gap-1 text-xs text-gray-400">
                                     <div className="flex items-center gap-1.5" title={visibilityText}>
@@ -168,7 +168,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                   })}
                 </ul>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
+                <div className="flex flex-col items-center justify-center h-full text-center text-gray-300">
                     <ClockIcon className="w-10 h-10 mb-2" />
                     <p>{t('noEventsForDay')}</p>
                 </div>

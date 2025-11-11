@@ -80,12 +80,12 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="course-title" className="block text-sm font-medium text-gray-300">{t('courseTitle')}</label>
+            <label htmlFor="course-title" className="block text-sm font-medium text-gray-200">{t('courseTitle')}</label>
             <input id="course-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">{t('courseImage')}</label>
+            <label className="block text-sm font-medium text-gray-200">{t('courseImage')}</label>
             <div className="mt-1">
                 {imageUrl ? (
                     <div className="relative group">
@@ -106,7 +106,7 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({ isOpen, onClose, onSa
             </div>
           </div>
           <div>
-            <label htmlFor="course-icon" className="block text-sm font-medium text-gray-300">{t('courseIcon')}</label>
+            <label htmlFor="course-icon" className="block text-sm font-medium text-gray-200">{t('courseIcon')}</label>
             <select id="course-icon" value={iconName} onChange={e => setIconName(e.target.value as IconName)}
                     className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="" disabled>{t('selectIcon')}</option>

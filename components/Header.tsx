@@ -64,12 +64,12 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
   const navItems = (
     <>
       {isTeacherView && (
-        <button onClick={onShowUserManagement} className="text-sm text-gray-300 hover:text-white transition-colors p-2 md:p-0">
+        <button onClick={onShowUserManagement} className="text-sm text-gray-200 hover:text-white transition-colors p-2 md:p-0">
           {t('manageUsers')}
         </button>
       )}
       <div ref={langRef} className="relative">
-        <button onClick={() => setLangDropdownOpen(!isLangDropdownOpen)} className="flex items-center gap-1 text-sm text-gray-300 hover:text-white transition-colors p-2 md:p-0">
+        <button onClick={() => setLangDropdownOpen(!isLangDropdownOpen)} className="flex items-center gap-1 text-sm text-gray-200 hover:text-white transition-colors p-2 md:p-0">
           <span role="img" aria-label="Translate icon">🌐</span>
           <span>{language.split('_')[0]}</span>
         </button>
@@ -83,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
       </div>
 
       <div ref={notificationsRef} className="relative flex items-center gap-4">
-          <button onClick={() => setNotificationsOpen(!isNotificationsOpen)} className="text-gray-300 hover:text-white relative p-2 md:p-0">
+          <button onClick={() => setNotificationsOpen(!isNotificationsOpen)} className="text-gray-200 hover:text-white relative p-2 md:p-0">
               <BellIcon className="h-6 w-6" />
               {unreadNotificationsCount > 0 && (
                 <span className="absolute top-1 right-1 md:top-0 md:right-0 flex h-4 w-4">
@@ -100,9 +100,9 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
                 <div className="max-h-80 overflow-y-auto">
                     {notifications.length > 0 ? (
                         notifications.map(n => (
-                            <div key={n.id} className={`flex items-start gap-3 p-3 text-sm border-b border-white/20 ${n.read ? 'opacity-60' : ''}`}>
+                            <div key={n.id} className={`flex items-start gap-3 p-3 text-sm border-b border-white/20 ${n.read ? 'opacity-70' : ''}`}>
                                 <div className="flex-grow">
-                                    <p className="text-gray-200">{n.message}</p>
+                                    <p className="text-gray-100">{n.message}</p>
                                     <p className="text-xs text-gray-400 mt-1">{n.timestamp}</p>
                                 </div>
                                 <button onClick={() => handleDismissNotification(n.id)} className="p-1 text-gray-400 hover:text-white" aria-label="Dispensar notificação">
@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
                 </div>
             )}
             <span className="hidden md:inline text-sm font-medium text-white">{user?.name}</span>
-            <ChevronDownIcon className="h-4 w-4 text-gray-300" />
+            <ChevronDownIcon className="h-4 w-4 text-gray-200" />
         </button>
         {isProfileDropdownOpen && (
              <div className="absolute top-full right-0 mt-2 w-48 bg-slate-800/90 backdrop-blur-lg border border-white/20 rounded-lg shadow-xl py-1 z-20">
@@ -173,7 +173,7 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
           <div className="flex items-center gap-4">
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-4">
-              <button onClick={() => setIsSearchVisible(true)} className="text-gray-300 hover:text-white p-2 md:p-0">
+              <button onClick={() => setIsSearchVisible(true)} className="text-gray-200 hover:text-white p-2 md:p-0">
                   <SearchIcon className="h-6 w-6" />
               </button>
               {navItems}
@@ -183,7 +183,7 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
             <div className="md:hidden">
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                className="text-gray-300 hover:text-white"
+                className="text-gray-200 hover:text-white"
                 aria-label="Abrir menu"
                 aria-expanded={isMenuOpen}
               >

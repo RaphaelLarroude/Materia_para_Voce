@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon, LinkIcon, PencilIcon, TrashIcon, PlusIcon, UserGroupIcon, AcademicCapIcon, DollarSignIcon } from './icons';
+import { ChevronLeftIcon, ChevronRightIcon, LinkIcon, PencilIcon, TrashIcon, PlusIcon, UserGroupIcon, AcademicCapIcon } from './icons';
 import { useLanguage } from '../languageContext';
 import { localeMap } from '../i18n';
 import { SidebarLink as SidebarLinkType, CalendarEvent } from '../types';
@@ -67,18 +67,18 @@ const Calendar: React.FC<{ events: CalendarEvent[] }> = ({ events }) => {
             <div className="flex justify-between items-center mb-4">
                 <span className="font-semibold text-sm capitalize">{monthName} {year}</span>
                 <div className="flex items-center">
-                    <button onClick={handlePrevMonth} className="p-1 text-gray-300 hover:text-white" aria-label={t('previousMonth')}>
+                    <button onClick={handlePrevMonth} className="p-1 text-gray-200 hover:text-white" aria-label={t('previousMonth')}>
                         <ChevronLeftIcon className="h-5 w-5" />
                     </button>
-                    <button onClick={handleNextMonth} className="p-1 text-gray-300 hover:text-white" aria-label={t('nextMonth')}>
+                    <button onClick={handleNextMonth} className="p-1 text-gray-200 hover:text-white" aria-label={t('nextMonth')}>
                         <ChevronRightIcon className="h-5 w-5" />
                     </button>
                 </div>
             </div>
-            <div className="grid grid-cols-7 text-center text-xs text-gray-400 mb-2">
+            <div className="grid grid-cols-7 text-center text-xs text-gray-300 mb-2">
                 {weekDays.map(day => <span key={day}>{day}</span>)}
             </div>
-            <div className="grid grid-cols-7 text-center text-sm text-gray-200">
+            <div className="grid grid-cols-7 text-center text-sm text-gray-100">
                 {calendarGrid.map((day, index) => (
                     <div key={index} className="py-1 flex justify-center items-center">
                        {day ? (
@@ -122,7 +122,7 @@ const SidebarLink: React.FC<{
     return (
         <div className="flex flex-col group">
             <div className="flex items-center">
-                <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center text-sm text-gray-200 hover:text-blue-400 py-1.5 transition-colors group flex-grow min-w-0">
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center text-sm text-gray-100 hover:text-blue-400 py-1.5 transition-colors group flex-grow min-w-0">
                     <div className="w-7 h-7 mr-3 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500 transition-colors">
                       <LinkIcon className="h-3.5 w-3.5 text-white" />
                     </div>
@@ -137,11 +137,11 @@ const SidebarLink: React.FC<{
             </div>
             {isTeacher && (
                 <div className="pl-10 -mt-1 space-y-0.5">
-                    <div className="flex items-center gap-1 text-xs text-gray-500" title={visibilityText}>
+                    <div className="flex items-center gap-1 text-xs text-gray-400" title={visibilityText}>
                         <UserGroupIcon className="w-3 h-3"/>
                         <span className="truncate">{visibilityText}</span>
                     </div>
-                     <div className="flex items-center gap-1 text-xs text-gray-500" title={visibilityTextYears}>
+                     <div className="flex items-center gap-1 text-xs text-gray-400" title={visibilityTextYears}>
                         <AcademicCapIcon className="w-3 h-3"/>
                         <span className="truncate">{visibilityTextYears}</span>
                     </div>
@@ -172,7 +172,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onShowCalendar, links, isTeacher, onA
         
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-4 rounded-2xl">
             <div className="flex justify-between items-center mb-3">
-                <h4 className="text-xs text-gray-400 font-semibold uppercase">{t('sidebarNavLinks')}</h4>
+                <h4 className="text-xs text-gray-300 font-semibold uppercase">{t('sidebarNavLinks')}</h4>
                 {isTeacher && (
                     <button onClick={onAddLink} className="flex items-center gap-1 text-xs bg-blue-600/80 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded-md transition-colors">
                         <PlusIcon className="w-3 h-3"/>
@@ -181,13 +181,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onShowCalendar, links, isTeacher, onA
                 )}
             </div>
             <nav className="space-y-1">
-                <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="flex items-center text-sm text-gray-200 hover:text-blue-400 py-1.5 transition-colors group flex-grow min-w-0">
-                    <div className="w-7 h-7 mr-3 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500 transition-colors">
-                      <DollarSignIcon className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="truncate font-medium">{t('apiPricing')}</span>
-                </a>
-
                 {links.map(link => (
                     <SidebarLink 
                         key={link.id} 

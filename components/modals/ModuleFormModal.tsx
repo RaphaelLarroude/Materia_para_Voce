@@ -74,12 +74,12 @@ const ModuleFormModal: React.FC<ModuleFormModalProps> = ({ isOpen, onClose, onSa
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="module-title" className="block text-sm font-medium text-gray-300">{t('moduleTitle')}</label>
+            <label htmlFor="module-title" className="block text-sm font-medium text-gray-200">{t('moduleTitle')}</label>
             <input id="module-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">{t('moduleIllustration')}</label>
+            <label className="block text-sm font-medium text-gray-200">{t('moduleIllustration')}</label>
             <div className="mt-1">
                 {illustrationUrl ? (
                     <div className="relative group">

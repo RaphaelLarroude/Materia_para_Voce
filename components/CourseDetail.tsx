@@ -59,9 +59,9 @@ const StudyMaterialItem: React.FC<{
       <button onClick={handleItemClick} className="flex items-center min-w-0 flex-grow text-left">
         <div className="flex-shrink-0 mr-4">{getIconForMaterial(material)}</div>
         <div className="min-w-0">
-          <span className="font-medium text-gray-200 truncate block">{material.title}</span>
+          <span className="font-medium text-white truncate block">{material.title}</span>
           {material.type === 'file' && material.fileName && (
-              <span className="text-xs text-gray-400 truncate hidden sm:inline">({material.fileName})</span>
+              <span className="text-xs text-gray-300 truncate hidden sm:inline">({material.fileName})</span>
           )}
         </div>
       </button>
@@ -120,7 +120,7 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
               ))}
             </ul>
             {(!selectedCategory.materials || selectedCategory.materials.length === 0) && (
-              <p className="text-center text-gray-400 py-8">{t('noMaterialsInCategory')}</p>
+              <p className="text-center text-gray-300 py-8">{t('noMaterialsInCategory')}</p>
             )}
              {isTeacherOwner && (
               <div className="mt-6 text-center">
@@ -140,7 +140,7 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
         <>
          <h1 className="text-3xl sm:text-4xl font-bold mb-8">{selectedModule.title}</h1>
          {selectedModule.categories?.length === 0 && isTeacherOwner && (
-            <p className="text-center text-gray-400 mb-6">{t('noCategoriesInModule')}</p>
+            <p className="text-center text-gray-300 mb-6">{t('noCategoriesInModule')}</p>
          )}
          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {(selectedModule.categories || []).map((category) => (
@@ -165,7 +165,7 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
       <>
         <h1 className="text-3xl sm:text-4xl font-bold mb-8">{course.title}</h1>
         {course.content?.length === 0 && isTeacherOwner && (
-            <p className="text-center text-gray-400 mb-6">{t('noModulesInCourse')}</p>
+            <p className="text-center text-gray-300 mb-6">{t('noModulesInCourse')}</p>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {course.content.map((module) => (
@@ -189,7 +189,7 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
     <div className="w-full text-white animate-fade-in">
       <header className="flex justify-between items-center mb-6">
         <nav aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm text-gray-300 bg-black/20 backdrop-blur-sm p-2 rounded-lg flex-wrap">
+          <ol className="flex items-center space-x-2 text-sm text-gray-200 bg-black/20 backdrop-blur-sm p-2 rounded-lg flex-wrap">
             <li><a href="#" onClick={backToCourseList} className="flex items-center hover:text-white"><HomeIcon className="h-4 w-4 mr-2" />{t('panel')}</a></li>
             <li><span className="text-gray-500">/</span></li>
             <li><a href="#" onClick={backToCourseList} className="hover:text-white">{t('myCourses')}</a></li>

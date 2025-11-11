@@ -88,12 +88,12 @@ const EventFormModal: React.FC<EventFormModalProps> = ({ isOpen, onClose, onSave
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="event-title" className="block text-sm font-medium text-gray-300">{t('eventTitle')}</label>
+            <label htmlFor="event-title" className="block text-sm font-medium text-gray-200">{t('eventTitle')}</label>
             <input id="event-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
            <div>
-            <label htmlFor="event-description" className="block text-sm font-medium text-gray-300">{t('description')}</label>
+            <label htmlFor="event-description" className="block text-sm font-medium text-gray-200">{t('description')}</label>
             <textarea
                 id="event-description"
                 value={description}
@@ -104,13 +104,13 @@ const EventFormModal: React.FC<EventFormModalProps> = ({ isOpen, onClose, onSave
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-                <label htmlFor="event-date" className="block text-sm font-medium text-gray-300">{t('date')}</label>
+                <label htmlFor="event-date" className="block text-sm font-medium text-gray-200">{t('date')}</label>
                 <input id="event-date" type="date" value={date} onChange={e => setDate(e.target.value)} required
                        className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"/>
             </div>
           </div>
           <div>
-            <label htmlFor="event-course" className="block text-sm font-medium text-gray-300">{t('course')}</label>
+            <label htmlFor="event-course" className="block text-sm font-medium text-gray-200">{t('course')}</label>
             <select id="event-course" value={course} onChange={e => setCourse(e.target.value)}
                     className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value={t('noCourse')}>{t('noCourse')}</option>
@@ -118,7 +118,7 @@ const EventFormModal: React.FC<EventFormModalProps> = ({ isOpen, onClose, onSave
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">{t('color')}</label>
+            <label className="block text-sm font-medium text-gray-200">{t('color')}</label>
             <div className="mt-2 flex gap-3">
               {eventColors.map(c => (
                 <button type="button" key={c} onClick={() => setColor(c)}

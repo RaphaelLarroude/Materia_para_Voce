@@ -114,12 +114,12 @@ const MaterialFormModal: React.FC<MaterialFormModalProps> = ({ isOpen, onClose, 
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="mat-title" className="block text-sm font-medium text-gray-300">{t('materialTitle')}</label>
+            <label htmlFor="mat-title" className="block text-sm font-medium text-gray-200">{t('materialTitle')}</label>
             <input id="mat-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">{t('uploadType')}</label>
+            <label className="block text-sm font-medium text-gray-200">{t('uploadType')}</label>
             <div className="mt-1 flex rounded-lg bg-black/20 p-1">
                 <button type="button" onClick={() => setUploadType('file')} className={`w-1/2 py-1.5 text-sm rounded-md transition-colors ${uploadType === 'file' ? 'bg-blue-600' : 'hover:bg-white/10'}`}>{t('file')}</button>
                 <button type="button" onClick={() => setUploadType('link')} className={`w-1/2 py-1.5 text-sm rounded-md transition-colors ${uploadType === 'link' ? 'bg-blue-600' : 'hover:bg-white/10'}`}>{t('link')}</button>
@@ -128,7 +128,7 @@ const MaterialFormModal: React.FC<MaterialFormModalProps> = ({ isOpen, onClose, 
 
           {uploadType === 'file' ? (
              <div>
-                <label htmlFor="mat-file" className="block text-sm font-medium text-gray-300">{t('uploadFile')}</label>
+                <label htmlFor="mat-file" className="block text-sm font-medium text-gray-200">{t('uploadFile')}</label>
                 <div className="mt-1 flex items-center justify-center w-full px-6 pt-5 pb-6 border-2 border-gray-600 border-dashed rounded-md">
                    <div className="text-center">
                     <DocumentIcon className="mx-auto h-10 w-10 text-gray-500" />
@@ -142,7 +142,7 @@ const MaterialFormModal: React.FC<MaterialFormModalProps> = ({ isOpen, onClose, 
              </div>
           ) : (
             <div>
-                <label htmlFor="mat-link" className="block text-sm font-medium text-gray-300">{t('linkUrl')}</label>
+                <label htmlFor="mat-link" className="block text-sm font-medium text-gray-200">{t('linkUrl')}</label>
                 <input id="mat-link" type="url" value={link} onChange={e => setLink(e.target.value)} placeholder="https://..." required
                        className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
             </div>

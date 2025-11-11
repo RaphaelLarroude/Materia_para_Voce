@@ -60,12 +60,12 @@ const SidebarLinkFormModal: React.FC<SidebarLinkFormModalProps> = ({ isOpen, onC
             </header>
             <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
               <div>
-                <label htmlFor="link-text" className="block text-sm font-medium text-gray-300">{t('label')}</label>
+                <label htmlFor="link-text" className="block text-sm font-medium text-gray-200">{t('label')}</label>
                 <input id="link-text" type="text" value={text} onChange={e => setText(e.target.value)} required
                        className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
               </div>
               <div>
-                <label htmlFor="link-url" className="block text-sm font-medium text-gray-300">{t('url')}</label>
+                <label htmlFor="link-url" className="block text-sm font-medium text-gray-200">{t('url')}</label>
                 <input id="link-url" type="url" value={url} onChange={e => setUrl(e.target.value)} required placeholder="https://..."
                        className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
               </div>

@@ -68,11 +68,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onClick, isTeacherOwner
         <div className="flex-grow mt-2 space-y-1">
             {isTeacherOwner && (
                 <>
-                    <div className="flex items-center gap-1.5 text-xs text-gray-400" title={visibilityText}>
+                    <div className="flex items-center gap-1.5 text-xs text-gray-300" title={visibilityText}>
                         <UserGroupIcon className="w-4 h-4" />
                         <span className="truncate">{visibilityText}</span>
                     </div>
-                     <div className="flex items-center gap-1.5 text-xs text-gray-400" title={visibilityTextYears}>
+                     <div className="flex items-center gap-1.5 text-xs text-gray-300" title={visibilityTextYears}>
                         <AcademicCapIcon className="w-4 h-4" />
                         <span className="truncate">{visibilityTextYears}</span>
                     </div>
@@ -84,7 +84,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onClick, isTeacherOwner
            <div className="w-full bg-white/20 rounded-full h-1.5 mb-1">
              <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${course.progress}%` }}></div>
            </div>
-           <p className="text-xs text-gray-300">{getStatusText()}</p>
+           <p className="text-xs text-gray-200">{getStatusText()}</p>
         </div>
 
         <button

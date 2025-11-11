@@ -25,6 +25,7 @@ import { getLinks, saveLinks } from './utils/links';
 import { getEvents, saveEvents } from './utils/calendar';
 import { generateId } from './utils/auth';
 import { PlusIcon } from './components/icons';
+import LandingPage from './components/LandingPage';
 
 const isItemVisibleToStudent = (item: { classrooms?: Classroom[], years?: SchoolYear[] }, student: User | null): boolean => {
     if (!student || student.role !== 'student') return true; // always visible to teachers or if no user
@@ -467,7 +468,7 @@ const App: React.FC = () => {
 
 
   if (!currentUser) {
-    return <Auth onLoginSuccess={handleLogin} />;
+    return <LandingPage onLoginSuccess={handleLogin} />;
   }
   
   const getDashboardTitle = () => {

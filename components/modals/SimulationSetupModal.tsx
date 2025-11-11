@@ -42,7 +42,7 @@ const SimulationSetupModal: React.FC<SimulationSetupModalProps> = ({ isOpen, onC
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label htmlFor="sim-year" className="block text-sm font-medium text-gray-300">{t('year')}</label>
+            <label htmlFor="sim-year" className="block text-sm font-medium text-gray-200">{t('year')}</label>
             <select id="sim-year" value={year} onChange={e => setYear(Number(e.target.value) as SchoolYear)} required
               className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -51,7 +51,7 @@ const SimulationSetupModal: React.FC<SimulationSetupModalProps> = ({ isOpen, onC
             </select>
           </div>
           <div>
-            <label htmlFor="sim-classroom" className="block text-sm font-medium text-gray-300">{t('classroom')}</label>
+            <label htmlFor="sim-classroom" className="block text-sm font-medium text-gray-200">{t('classroom')}</label>
             <select id="sim-classroom" value={classroom} onChange={e => setClassroom(e.target.value as Classroom)} required
               className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >

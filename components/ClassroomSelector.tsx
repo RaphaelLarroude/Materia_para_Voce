@@ -37,7 +37,7 @@ const ClassroomSelector: React.FC<ClassroomSelectorProps> = ({ selectedClassroom
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-300">{t('visibleToClassrooms')}</label>
+      <label className="block text-sm font-medium text-gray-200">{t('visibleToClassrooms')}</label>
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"
@@ -45,7 +45,7 @@ const ClassroomSelector: React.FC<ClassroomSelectorProps> = ({ selectedClassroom
           className={`px-3 py-1 text-xs rounded-full border transition-colors ${
             isAllSelected
               ? 'bg-blue-600 border-blue-600 text-white'
-              : 'bg-transparent border-gray-500 text-gray-300 hover:bg-white/10'
+              : 'bg-transparent border-gray-500 text-gray-200 hover:bg-white/10'
           }`}
         >
           {t('allClassrooms')}
@@ -58,7 +58,7 @@ const ClassroomSelector: React.FC<ClassroomSelectorProps> = ({ selectedClassroom
             className={`px-3 py-1 text-xs rounded-full border transition-colors ${
               !isAllSelected && selectedClassrooms.includes(classroom)
                 ? 'bg-blue-600 border-blue-600 text-white'
-                : 'bg-transparent border-gray-500 text-gray-300 hover:bg-white/10'
+                : 'bg-transparent border-gray-500 text-gray-200 hover:bg-white/10'
             }`}
           >
             {`${t('classroom')} ${classroom}`}

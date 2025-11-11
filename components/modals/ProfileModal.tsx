@@ -133,14 +133,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, currentUse
                       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden"/>
                   </div>
                   <div className="flex-grow">
-                      <label htmlFor="profile-name" className="block text-sm font-medium text-gray-300">{t('name')}</label>
+                      <label htmlFor="profile-name" className="block text-sm font-medium text-gray-200">{t('name')}</label>
                       <input id="profile-name" type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                   </div>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
-                  <label htmlFor="profile-year" className="block text-sm font-medium text-gray-300">{t('year')}</label>
+                  <label htmlFor="profile-year" className="block text-sm font-medium text-gray-200">{t('year')}</label>
                   <select id="profile-year" value={year} onChange={(e) => setYear(Number(e.target.value) as SchoolYear)} required
                     className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -148,7 +148,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, currentUse
                   </select>
                 </div>
                 <div className="flex-1">
-                  <label htmlFor="profile-classroom" className="block text-sm font-medium text-gray-300">{t('classroom')}</label>
+                  <label htmlFor="profile-classroom" className="block text-sm font-medium text-gray-200">{t('classroom')}</label>
                   <select id="profile-classroom" value={classroom} onChange={(e) => setClassroom(e.target.value as Classroom)} required
                     className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -161,15 +161,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, currentUse
               <div className="space-y-4 pt-6 border-t border-white/10">
                   <h3 className="text-md font-semibold">{t('passwordChange')}</h3>
                   <div>
-                      <label htmlFor="current-password">{t('currentPassword')}</label>
+                      <label htmlFor="current-password" className="text-sm font-medium text-gray-200">{t('currentPassword')}</label>
                       <input id="current-password" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                   </div>
                   <div>
-                      <label htmlFor="new-password">{t('newPassword')}</label>
+                      <label htmlFor="new-password" className="text-sm font-medium text-gray-200">{t('newPassword')}</label>
                       <input id="new-password" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                   </div>
                    <div>
-                      <label htmlFor="confirm-new-password">{t('confirmNewPassword')}</label>
+                      <label htmlFor="confirm-new-password" className="text-sm font-medium text-gray-200">{t('confirmNewPassword')}</label>
                       <input id="confirm-new-password" type="password" value={confirmNewPassword} onChange={e => setConfirmNewPassword(e.target.value)} className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                   </div>
               </div>
