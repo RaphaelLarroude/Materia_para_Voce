@@ -4,7 +4,6 @@ import { User } from '../types';
 import Auth from './Auth';
 import { useLanguage } from '../languageContext';
 import { 
-    BookOpenIcon, 
     AcademicCapIcon, 
     MenuIcon, 
     XIcon, 
@@ -14,6 +13,7 @@ import {
     CheckIcon
 } from './icons';
 import Footer from './Footer';
+import { APP_LOGO_URL } from '../constants';
 
 interface LandingPageProps {
   onLoginSuccess: (user: User) => void;
@@ -62,9 +62,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
       <nav className={`fixed w-full top-0 z-40 transition-all duration-300 px-4 md:px-12 py-3 ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-md border-b border-white/20' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection('home')}>
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg">
-                    <BookOpenIcon className="w-6 h-6"/>
-                </div>
+                <img src={APP_LOGO_URL} alt="Logo" className="w-10 h-10 shadow-lg rounded-lg" />
                 <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-blue-900' : 'text-blue-900 md:text-white shadow-black/20 drop-shadow-md'}`}>
                     Matéria para Você
                 </span>
