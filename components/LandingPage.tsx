@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '../types';
 import Auth from './Auth';
@@ -10,10 +9,10 @@ import {
     CalendarIcon,
     UserGroupIcon,
     MegaphoneIcon,
-    CheckIcon
+    CheckIcon,
+    AppLogoIcon
 } from './icons';
 import Footer from './Footer';
-import { APP_LOGO_URL } from '../constants';
 
 interface LandingPageProps {
   onLoginSuccess: (user: User) => void;
@@ -62,7 +61,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
       <nav className={`fixed w-full top-0 z-40 transition-all duration-300 px-4 md:px-12 py-3 ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-md border-b border-white/20' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollToSection('home')}>
-                <img src={APP_LOGO_URL} alt="Logo" className="w-10 h-10 shadow-lg rounded-lg" />
+                <AppLogoIcon className="w-10 h-10 shadow-lg" />
                 <span className={`font-bold text-xl tracking-tight ${isScrolled ? 'text-blue-900' : 'text-blue-900 md:text-white shadow-black/20 drop-shadow-md'}`}>
                     Matéria para Você
                 </span>

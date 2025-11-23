@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SearchIcon, BellIcon, ChevronDownIcon, MenuIcon, XIcon } from './icons';
+import { SearchIcon, BellIcon, ChevronDownIcon, MenuIcon, XIcon, AppLogoIcon } from './icons';
 import { Notification, Language, User } from '../types';
-import { NOTIFICATIONS, APP_LOGO_URL } from '../constants';
+import { NOTIFICATIONS } from '../constants';
 import { useLanguage } from '../languageContext';
 
 interface HeaderProps {
@@ -167,7 +167,7 @@ const Header: React.FC<HeaderProps> = ({ user, searchQuery, onSearchChange, onLo
                 </div>
              ) : (
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
-                    <img src={APP_LOGO_URL} alt="Logo" className="w-8 h-8 rounded-lg" />
+                    <AppLogoIcon className="w-8 h-8 rounded-lg" />
                     <span className="font-bold text-lg text-blue-900 hidden sm:block">Matéria para Você</span>
                     <span className="font-bold text-lg text-blue-900 sm:hidden">MPV</span>
                 </div>
