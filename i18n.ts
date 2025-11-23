@@ -1,3 +1,4 @@
+
 import { Language as AppLanguage } from './types';
 
 export const translations = {
@@ -192,6 +193,12 @@ export const translations = {
     visibleToYears: 'Visível para os Anos',
     allYears: 'Todos os Anos',
 
+    // AI Chat
+    aiAssistant: 'Assistente IA',
+    askAnything: 'Pergunte algo sobre seus estudos...',
+    errorOccurred: 'Ocorreu um erro. Tente novamente.',
+    welcomeAI: 'Olá! Sou seu assistente virtual do Matéria para Você. Como posso ajudar nos seus estudos hoje?',
+
     // Footer
     copyrightNotice: '© {year} Raphael Costa. Todos os direitos reservados.',
     madeFor: 'Feito para o site Matéria para Você.',
@@ -383,6 +390,12 @@ export const translations = {
     visibleToYears: 'Visible to Years',
     allYears: 'All Years',
 
+    // AI Chat
+    aiAssistant: 'AI Assistant',
+    askAnything: 'Ask anything about your studies...',
+    errorOccurred: 'An error occurred. Please try again.',
+    welcomeAI: 'Hello! I am your Matéria para Você virtual assistant. How can I help you with your studies today?',
+
     // Footer
     copyrightNotice: '© {year} Raphael Costa. All rights reserved.',
     madeFor: 'Made for the Matéria para Você website.',
@@ -573,6 +586,12 @@ export const translations = {
     visibleToClassrooms: 'Visible para las Clases',
     visibleToYears: 'Visible para los Años',
     allYears: 'Todos los Años',
+
+    // AI Chat
+    aiAssistant: 'Asistente IA',
+    askAnything: 'Pregunta cualquier cosa sobre tus estudios...',
+    errorOccurred: 'Ocurrió un error. Por favor inténtalo de nuevo.',
+    welcomeAI: '¡Hola! Soy tu asistente virtual de Matéria para Você. ¿Cómo puedo ayudarte con tus estudios hoy?',
 
     // Footer
     copyrightNotice: '© {year} Raphael Costa. Todos los derechos reservados.',

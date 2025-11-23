@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Course, User, StoredUser, CourseModule, StudyMaterialCategory, StudyMaterial, SidebarLink, CalendarEvent, Classroom, SchoolYear } from './types';
 import CourseCard from './components/CourseCard';
@@ -18,6 +19,7 @@ import SimulationBanner from './components/SimulationBanner';
 import FilePreviewModal from './components/modals/FilePreviewModal';
 import SimulationSetupModal from './components/modals/SimulationSetupModal';
 import Footer from './components/Footer';
+import AIChat from './components/AIChat';
 import { useLanguage } from './languageContext';
 import { getUsers, saveUsers, simpleHash } from './utils/auth';
 import { getCourses, saveCourses } from './utils/course';
@@ -632,6 +634,7 @@ const App: React.FC = () => {
             onStart={handleStartSimulation}
         />
     )}
+    <AIChat />
     <Footer />
     </div>
   );
