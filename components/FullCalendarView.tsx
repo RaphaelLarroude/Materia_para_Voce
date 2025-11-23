@@ -74,34 +74,34 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="calendar-title">
-      <div className="bg-white/10 border border-white/20 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden shadow-2xl">
+      <div className="bg-white/80 backdrop-blur-xl border border-blue-100/50 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden shadow-2xl">
         <div className="w-full md:w-3/5 p-6 flex flex-col">
           <header className="flex justify-between items-center mb-6">
-            <h2 id="calendar-title" className="text-xl font-bold text-white capitalize">{monthName} {year}</h2>
+            <h2 id="calendar-title" className="text-xl font-bold text-blue-900 capitalize">{monthName} {year}</h2>
             <div className="flex items-center gap-2">
-              <button onClick={handlePrevMonth} className="p-2 rounded-full hover:bg-white/20" aria-label={t('previousMonth')}>
+              <button onClick={handlePrevMonth} className="p-2 rounded-full hover:bg-blue-100/50 text-blue-600" aria-label={t('previousMonth')}>
                 <ChevronLeftIcon className="h-5 w-5" />
               </button>
-              <button onClick={handleNextMonth} className="p-2 rounded-full hover:bg-white/20" aria-label={t('nextMonth')}>
+              <button onClick={handleNextMonth} className="p-2 rounded-full hover:bg-blue-100/50 text-blue-600" aria-label={t('nextMonth')}>
                 <ChevronRightIcon className="h-5 w-5" />
               </button>
             </div>
           </header>
 
-          <div className="grid grid-cols-7 text-center text-xs text-gray-200 mb-2">
+          <div className="grid grid-cols-7 text-center text-xs text-blue-500 mb-2">
             {weekDays.map(day => <span key={day}>{day}</span>)}
           </div>
           <div className="grid grid-cols-7 flex-grow">
             {calendarGrid.map((day, index) => (
-              <div key={index} className="border-t border-r border-white/10 p-1 flex flex-col">
+              <div key={index} className="border-t border-r border-blue-100/50 p-1 flex flex-col">
                 {day && (
                   <button
                     onClick={() => handleDayClick(day)}
                     className={`
                       w-10 h-10 flex items-center justify-center rounded-full mx-auto transition-colors text-sm
-                      ${isSelected(day) ? 'bg-white text-gray-900 font-bold' : 'hover:bg-white/20'}
+                      ${isSelected(day) ? 'bg-blue-600 text-white font-bold' : 'hover:bg-blue-100/50'}
                       ${isToday(day) && !isSelected(day) ? 'border-2 border-blue-400' : ''}
-                      ${!isToday(day) && !isSelected(day) ? 'text-white' : ''}
+                      ${!isToday(day) && !isSelected(day) ? 'text-blue-900' : ''}
                     `}
                   >
                     {day}
@@ -117,13 +117,13 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
           </div>
         </div>
         
-        <div className="w-full md:w-2/5 bg-black/20 p-6 flex flex-col border-t md:border-t-0 md:border-l border-white/20">
+        <div className="w-full md:w-2/5 bg-white/40 p-6 flex flex-col border-t md:border-t-0 md:border-l border-blue-100/50">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg text-white">
-                {t('eventsFor')} <span className="text-blue-300">{selectedDate.toLocaleDateString(localeMap[language], { day: '2-digit', month: 'long' })}</span>
+              <h3 className="font-bold text-lg text-blue-900">
+                {t('eventsFor')} <span className="text-blue-600">{selectedDate.toLocaleDateString(localeMap[language], { day: '2-digit', month: 'long' })}</span>
               </h3>
                {isTeacher && (
-                  <button onClick={() => onAddEvent(selectedDate)} className="flex items-center gap-1 text-xs bg-blue-600/80 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded-md transition-colors">
+                  <button onClick={() => onAddEvent(selectedDate)} className="flex items-center gap-1 text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded-md transition-colors">
                       <PlusIcon className="w-3 h-3"/> {t('addEvent')}
                   </button>
               )}
@@ -139,13 +139,13 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                       ? t('allYears')
                       : `${t('years')}: ${event.years.map(y => `${y}º`).join(', ')}`;
                     return (
-                      <li key={event.id} className={`relative group p-4 rounded-lg border-l-4 ${eventColorClasses[event.color].replace('bg', 'border')} bg-white/5`}>
-                        <p className="font-semibold text-white">{event.title}</p>
-                        {event.description && <p className="text-sm text-gray-200 mt-1 break-words">{event.description}</p>}
+                      <li key={event.id} className={`relative group p-4 rounded-lg border-l-4 ${eventColorClasses[event.color].replace('bg', 'border')} bg-white/60 shadow-sm border-gray-100/50`}>
+                        <p className="font-semibold text-blue-900">{event.title}</p>
+                        {event.description && <p className="text-sm text-blue-800 mt-1 break-words">{event.description}</p>}
                         <div className="flex justify-between items-center mt-2">
-                            <p className="text-xs text-gray-200">{event.course}</p>
+                            <p className="text-xs text-blue-500">{event.course}</p>
                             {isTeacher && (
-                                <div className="flex flex-col items-end gap-1 text-xs text-gray-400">
+                                <div className="flex flex-col items-end gap-1 text-xs text-blue-400">
                                     <div className="flex items-center gap-1.5" title={visibilityText}>
                                         <UserGroupIcon className="w-3.5 h-3.5" />
                                         <span className="truncate">{visibilityText}</span>
@@ -159,8 +159,8 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                         </div>
                         {isTeacher && (
                             <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => onEditEvent(event)} className="p-1.5 bg-blue-600/80 rounded-full hover:bg-blue-500" aria-label={t('edit')}><PencilIcon className="w-3 h-3 text-white" /></button>
-                                <button onClick={() => onDeleteEvent(event.id)} className="p-1.5 bg-red-600/80 rounded-full hover:bg-red-500" aria-label={t('delete')}><TrashIcon className="w-3 h-3 text-white" /></button>
+                                <button onClick={() => onEditEvent(event)} className="p-1.5 bg-blue-100 rounded-full hover:bg-blue-200" aria-label={t('edit')}><PencilIcon className="w-3 h-3 text-blue-600" /></button>
+                                <button onClick={() => onDeleteEvent(event.id)} className="p-1.5 bg-red-100 rounded-full hover:bg-red-200" aria-label={t('delete')}><TrashIcon className="w-3 h-3 text-red-500" /></button>
                             </div>
                         )}
                       </li>
@@ -168,7 +168,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
                   })}
                 </ul>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center text-gray-300">
+                <div className="flex flex-col items-center justify-center h-full text-center text-blue-400">
                     <ClockIcon className="w-10 h-10 mb-2" />
                     <p>{t('noEventsForDay')}</p>
                 </div>
@@ -178,7 +178,7 @@ const FullCalendarView: React.FC<FullCalendarViewProps> = ({ onClose, events, is
       </div>
        <button
         onClick={onClose}
-        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-colors"
+        className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/20 transition-colors text-blue-900"
         aria-label={t('closeCalendar')}
       >
         <XIcon className="h-5 w-5" />

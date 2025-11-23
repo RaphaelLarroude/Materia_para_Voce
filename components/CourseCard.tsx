@@ -1,7 +1,7 @@
 import React from 'react';
 import { Course } from '../types';
 import { useLanguage } from '../languageContext';
-import { PencilIcon, TrashIcon, UserGroupIcon, AcademicCapIcon } from './icons';
+import { PencilIcon, TrashIcon, UserGroupIcon, AcademicCapIcon, IconMap, IconName } from './icons';
 
 interface CourseCardProps {
   course: Course;
@@ -19,17 +19,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onClick, isTeacherOwner
       return t('notStartedYet');
     }
     return `${course.progress}${t('completed')}`;
-  }
-
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit?.(course);
-  }
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete?.(course);
-  }
+  };
 
   const visibilityText = (!course.classrooms || course.classrooms.length === 0)
     ? t('allClassrooms')
@@ -39,64 +29,70 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onClick, isTeacherOwner
     ? t('allYears')
     : `${t('years')}: ${course.years.map(y => `${y}º`).join(', ')}`;
 
+  const IconComponent = IconMap[course.icon as IconName] || IconMap.BookOpenIcon;
+
   return (
-    <div
-      className="bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg rounded-2xl flex flex-col text-white transition-all duration-300 hover:border-white/40 hover:-translate-y-1 cursor-pointer overflow-hidden group"
+    <div 
+      className="relative bg-white/30 backdrop-blur-lg border border-white/40 rounded-2xl p-6 hover:bg-white/40 transition-all duration-300 cursor-pointer shadow-lg group"
       onClick={() => onClick(course)}
       role="button"
       tabIndex={0}
-      aria-label={`Acessar curso ${course.title}`}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick(course)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClick(course);
+        }
+      }}
     >
-      <div className="relative">
-        <img src={course.imageUrl} alt={`Imagem do curso ${course.title}`} className="w-full h-32 object-cover" />
-        {isTeacherOwner && (
-          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onClick={handleEditClick} className="p-2 bg-blue-600/80 rounded-full hover:bg-blue-500 transition-colors" aria-label={t('edit')}>
-                <PencilIcon className="w-4 h-4 text-white" />
-            </button>
-            <button onClick={handleDeleteClick} className="p-2 bg-red-600/80 rounded-full hover:bg-red-500 transition-colors" aria-label={t('delete')}>
-                <TrashIcon className="w-4 h-4 text-white" />
-            </button>
-          </div>
+      <div className="flex items-center gap-4">
+        {course.imageUrl ? (
+             <img src={course.imageUrl} alt={course.title} className="w-16 h-16 rounded-xl object-cover shadow-sm border border-white/20"/>
+        ) : (
+             <div className="w-16 h-16 rounded-xl bg-blue-100/50 flex items-center justify-center text-blue-600 shadow-sm border border-white/20">
+               <IconComponent className="w-8 h-8" />
+             </div>
         )}
+        <div className="min-w-0 flex-1">
+          <h3 className="text-xl font-bold text-blue-900 truncate">{course.title}</h3>
+          <p className="text-sm text-blue-800 mt-1">{course.teacher}</p>
+        </div>
       </div>
       
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-sm font-bold text-blue-400 uppercase">{course.title}</h3>
-        
-        <div className="flex-grow mt-2 space-y-1">
-            {isTeacherOwner && (
-                <>
-                    <div className="flex items-center gap-1.5 text-xs text-gray-300" title={visibilityText}>
-                        <UserGroupIcon className="w-4 h-4" />
-                        <span className="truncate">{visibilityText}</span>
-                    </div>
-                     <div className="flex items-center gap-1.5 text-xs text-gray-300" title={visibilityTextYears}>
-                        <AcademicCapIcon className="w-4 h-4" />
-                        <span className="truncate">{visibilityTextYears}</span>
-                    </div>
-                </>
-            )}
+      <div className="mt-4">
+        <div className="flex justify-between text-xs text-blue-800 mb-1 font-medium">
+            <span>{getStatusText()}</span>
+            <span>{course.progress}%</span>
         </div>
-
-        <div className="mt-4">
-           <div className="w-full bg-white/20 rounded-full h-1.5 mb-1">
-             <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${course.progress}%` }}></div>
-           </div>
-           <p className="text-xs text-gray-200">{getStatusText()}</p>
+        <div className="w-full bg-blue-100/50 rounded-full h-2 overflow-hidden">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(37,99,235,0.5)]" 
+            style={{ width: `${course.progress}%` }}
+          ></div>
         </div>
-
-        <button
-          className="mt-4 w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-sm"
-          onClick={(e) => {
-              e.stopPropagation();
-              onClick(course);
-          }}
-        >
-          {t('access')}
-        </button>
       </div>
+      
+      {isTeacherOwner && (
+        <>
+            <div className="mt-3 pt-3 border-t border-blue-100/30 flex flex-col gap-1">
+                <div className="flex items-center gap-1.5 text-xs text-blue-700" title={visibilityText}>
+                    <UserGroupIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span className="truncate">{visibilityText}</span>
+                </div>
+                 <div className="flex items-center gap-1.5 text-xs text-blue-700" title={visibilityTextYears}>
+                    <AcademicCapIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span className="truncate">{visibilityTextYears}</span>
+                </div>
+            </div>
+
+            <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={(e) => { e.stopPropagation(); onEdit && onEdit(course); }} className="p-2 bg-blue-100 rounded-full hover:bg-blue-200 text-blue-600" aria-label={t('edit')}>
+                    <PencilIcon className="w-4 h-4" />
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); onDelete && onDelete(course); }} className="p-2 bg-red-100 rounded-full hover:bg-red-200 text-red-500" aria-label={t('delete')}>
+                    <TrashIcon className="w-4 h-4" />
+                </button>
+            </div>
+        </>
+      )}
     </div>
   );
 };

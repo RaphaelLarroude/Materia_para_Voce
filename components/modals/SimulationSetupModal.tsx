@@ -34,35 +34,35 @@ const SimulationSetupModal: React.FC<SimulationSetupModalProps> = ({ isOpen, onC
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm shadow-2xl text-white">
-        <header className="flex justify-between items-center p-4 border-b border-white/20">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white/80 backdrop-blur-xl border border-blue-200/50 rounded-2xl w-full max-w-sm shadow-2xl text-blue-900">
+        <header className="flex justify-between items-center p-4 border-b border-blue-100/50">
           <h2 className="text-lg font-bold">{t('setupStudentSimulation')}</h2>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10"><XIcon className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/30 text-blue-500 hover:text-blue-800"><XIcon className="w-5 h-5" /></button>
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label htmlFor="sim-year" className="block text-sm font-medium text-gray-200">{t('year')}</label>
+            <label htmlFor="sim-year" className="block text-sm font-medium text-blue-800">{t('year')}</label>
             <select id="sim-year" value={year} onChange={e => setYear(Number(e.target.value) as SchoolYear)} required
-              className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>{t('selectYearToSimulate')}</option>
               {ALL_YEARS.map(y => <option key={y} value={y}>{y}º {t('year')}</option>)}
             </select>
           </div>
           <div>
-            <label htmlFor="sim-classroom" className="block text-sm font-medium text-gray-200">{t('classroom')}</label>
+            <label htmlFor="sim-classroom" className="block text-sm font-medium text-blue-800">{t('classroom')}</label>
             <select id="sim-classroom" value={classroom} onChange={e => setClassroom(e.target.value as Classroom)} required
-              className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>{t('selectClassroomToSimulate')}</option>
               {ALL_CLASSROOMS.map(c => <option key={c} value={c}>{t('classroom')} {c}</option>)}
             </select>
           </div>
-          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-          <div className="flex justify-end gap-4 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20">{t('cancel')}</button>
-            <button type="submit" className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700">
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          <div className="flex justify-end gap-4 pt-4 border-t border-blue-100/50">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg bg-blue-100/50 hover:bg-blue-200/50 border border-blue-100/50 text-blue-900 transition-colors">{t('cancel')}</button>
+            <button type="submit" className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 transition-all">
               {t('startSimulation')}
             </button>
           </div>

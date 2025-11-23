@@ -80,59 +80,59 @@ const EventFormModal: React.FC<EventFormModalProps> = ({ isOpen, onClose, onSave
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-md shadow-2xl text-white max-h-[90vh] flex flex-col">
-        <header className="flex justify-between items-center p-4 border-b border-white/20">
+    <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white/80 backdrop-blur-xl border border-blue-200/50 rounded-2xl w-full max-w-md shadow-2xl text-blue-900 max-h-[90vh] flex flex-col">
+        <header className="flex justify-between items-center p-4 border-b border-blue-100/50">
           <h2 className="text-lg font-bold">{eventToEdit ? t('editEvent') : t('addEvent')}</h2>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10"><XIcon className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/30 text-blue-500 hover:text-blue-800"><XIcon className="w-5 h-5" /></button>
         </header>
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           <div>
-            <label htmlFor="event-title" className="block text-sm font-medium text-gray-200">{t('eventTitle')}</label>
+            <label htmlFor="event-title" className="block text-sm font-medium text-blue-800">{t('eventTitle')}</label>
             <input id="event-title" type="text" value={title} onChange={e => setTitle(e.target.value)} required
-                   className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                   className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
            <div>
-            <label htmlFor="event-description" className="block text-sm font-medium text-gray-200">{t('description')}</label>
+            <label htmlFor="event-description" className="block text-sm font-medium text-blue-800">{t('description')}</label>
             <textarea
                 id="event-description"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 rows={3}
-                className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-                <label htmlFor="event-date" className="block text-sm font-medium text-gray-200">{t('date')}</label>
+                <label htmlFor="event-date" className="block text-sm font-medium text-blue-800">{t('date')}</label>
                 <input id="event-date" type="date" value={date} onChange={e => setDate(e.target.value)} required
-                       className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"/>
+                       className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
             </div>
           </div>
           <div>
-            <label htmlFor="event-course" className="block text-sm font-medium text-gray-200">{t('course')}</label>
+            <label htmlFor="event-course" className="block text-sm font-medium text-blue-800">{t('course')}</label>
             <select id="event-course" value={course} onChange={e => setCourse(e.target.value)}
-                    className="mt-1 block w-full bg-black/20 text-white rounded-lg border-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    className="mt-1 block w-full bg-white/30 text-blue-900 rounded-lg border border-blue-200/50 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value={t('noCourse')}>{t('noCourse')}</option>
                 {courses.map(c => <option key={c.id} value={c.title}>{c.title}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200">{t('color')}</label>
+            <label className="block text-sm font-medium text-blue-800">{t('color')}</label>
             <div className="mt-2 flex gap-3">
               {eventColors.map(c => (
                 <button type="button" key={c} onClick={() => setColor(c)}
-                        className={`w-8 h-8 rounded-full ${colorClasses[c]} ${color === c ? 'ring-2 ring-offset-2 ring-offset-slate-900 ring-white' : ''}`}
+                        className={`w-8 h-8 rounded-full ${colorClasses[c]} ${color === c ? 'ring-2 ring-offset-2 ring-offset-white ring-blue-500' : 'opacity-70 hover:opacity-100'}`}
                         aria-label={`Select color ${c}`}></button>
               ))}
             </div>
           </div>
           <ClassroomSelector selectedClassrooms={classrooms} onChange={setClassrooms} />
           <YearSelector selectedYears={years} onChange={setYears} />
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-          <div className="flex justify-end gap-4 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20">{t('cancel')}</button>
-            <button type="submit" disabled={isLoading} className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800">
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <div className="flex justify-end gap-4 pt-4 border-t border-blue-100/50">
+            <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg bg-blue-100/50 hover:bg-blue-200/50 text-blue-900 transition-colors">{t('cancel')}</button>
+            <button type="submit" disabled={isLoading} className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 disabled:bg-blue-800 disabled:text-gray-300 transition-all">
               {isLoading ? t(eventToEdit ? 'saving' : 'creating') : t('save')}
             </button>
           </div>

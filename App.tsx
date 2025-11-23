@@ -89,20 +89,6 @@ const App: React.FC = () => {
     setCourses(allCourses);
     setSidebarLinks(allLinks);
     setCalendarEvents(allEvents);
-
-    try {
-      const storedUser = localStorage.getItem('currentUser');
-      if (storedUser) {
-        const user: User = JSON.parse(storedUser);
-        const fullUser = allUsers.find(u => u.id === user.id);
-        if (fullUser && fullUser.isActive) {
-          setCurrentUser(fullUser);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to parse user from localStorage", error);
-      localStorage.removeItem('currentUser');
-    }
   }, []);
 
   const isTeacherView = !simulationContext && currentUser?.role === 'teacher';
@@ -143,13 +129,11 @@ const App: React.FC = () => {
   // --- Auth Handlers ---
   const handleLogin = (user: User) => {
     setCurrentUser(user);
-    localStorage.setItem('currentUser', JSON.stringify(user));
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
     setSimulationContext(null);
-    localStorage.removeItem('currentUser');
     setSelectedCourse(null);
   };
   
@@ -176,7 +160,6 @@ const App: React.FC = () => {
 
         const { passwordHash, ...userForSession } = updatedUser;
         setCurrentUser(userForSession);
-        localStorage.setItem('currentUser', JSON.stringify(userForSession));
         
         resolve();
     });
@@ -478,7 +461,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen font-sans text-white flex flex-col">
+    <div className="min-h-screen font-sans text-blue-900 flex flex-col">
       {simulationContext && <SimulationBanner onExit={handleEndSimulation} simulationContext={simulationContext} />}
       <Header 
         user={currentUser}
@@ -495,7 +478,7 @@ const App: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             <main className="flex-1 py-4 sm:py-6 lg:py-8">
               <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
+                <h1 className="text-3xl sm:text-4xl font-bold text-blue-900 text-left">
                   {getDashboardTitle()}
                 </h1>
                 {isTeacherView && (
@@ -517,8 +500,8 @@ const App: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                 <div className="text-center py-16 bg-white/5 rounded-2xl">
-                    <p className="text-gray-300">{currentUser.role === 'teacher' ? t('noCoursesCreated') : 'No courses available.'}</p>
+                 <div className="text-center py-16 bg-white/20 backdrop-blur-md rounded-2xl">
+                    <p className="text-blue-800">{currentUser.role === 'teacher' ? t('noCoursesCreated') : 'No courses available.'}</p>
                  </div>
               )}
             </main>

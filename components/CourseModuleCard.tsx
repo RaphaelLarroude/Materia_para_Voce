@@ -24,7 +24,7 @@ const CourseModuleCard: React.FC<CourseModuleCardProps> = ({ module, onClick, is
 
   return (
     <div
-      className="relative aspect-video bg-cover bg-center rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300 hover:-translate-y-1 border border-white/20 shadow-lg flex flex-col justify-between"
+      className="relative aspect-video bg-cover bg-center rounded-2xl overflow-hidden group cursor-pointer transition-all duration-300 hover:-translate-y-1 border border-white/40 shadow-lg flex flex-col justify-between"
       style={{ backgroundImage: `url(${module.illustrationUrl})` }}
       role="button"
       tabIndex={0}
@@ -32,7 +32,7 @@ const CourseModuleCard: React.FC<CourseModuleCardProps> = ({ module, onClick, is
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}
     >
-      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+      <div className="absolute inset-0 bg-white/10 group-hover:bg-white/20 transition-colors" />
       {isTeacherOwner && (
         <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             <button onClick={(e) => { e.stopPropagation(); onEdit?.(); }} className="p-2 bg-blue-600/80 rounded-full hover:bg-blue-500" aria-label={t('edit')}>
@@ -44,19 +44,19 @@ const CourseModuleCard: React.FC<CourseModuleCardProps> = ({ module, onClick, is
         </div>
       )}
       <div className="relative p-3">
-        <div className="inline-block bg-white/10 backdrop-blur-lg border border-white/20 p-2 rounded-md">
-          <h3 className="text-white text-sm font-bold uppercase tracking-wide leading-tight">
+        <div className="inline-block bg-white/50 backdrop-blur-md border border-white/40 p-2 rounded-md shadow-sm">
+          <h3 className="text-blue-900 text-sm font-bold uppercase tracking-wide leading-tight">
             {module.title}
           </h3>
         </div>
       </div>
       {isTeacherOwner && (
-        <div className="relative p-2 bg-black/40 space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-gray-200" title={visibilityText}>
+        <div className="relative p-2 bg-white/50 backdrop-blur-md space-y-1">
+            <div className="flex items-center gap-1.5 text-xs text-blue-800" title={visibilityText}>
                 <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">{visibilityText}</span>
             </div>
-             <div className="flex items-center gap-1.5 text-xs text-gray-200" title={visibilityTextYears}>
+             <div className="flex items-center gap-1.5 text-xs text-blue-800" title={visibilityTextYears}>
                 <AcademicCapIcon className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">{visibilityTextYears}</span>
             </div>

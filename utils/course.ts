@@ -1,8 +1,6 @@
 import { Course } from '../types';
 import { generateId } from './auth';
 
-const COURSES_KEY = 'materiaParaVoce_courses';
-
 const createDefaultCourses = (): Course[] => {
     const inglesCourse: Course = {
         id: generateId(),
@@ -90,33 +88,13 @@ const createDefaultCourses = (): Course[] => {
 };
 
 
+// In-memory storage
+let storedCourses: Course[] = createDefaultCourses();
+
 export const getCourses = (): Course[] => {
-  try {
-    const coursesJson = localStorage.getItem(COURSES_KEY);
-    // If no courses in localStorage, create default ones.
-    if (!coursesJson) {
-      const defaultCourses = createDefaultCourses();
-      saveCourses(defaultCourses);
-      return defaultCourses;
-    }
-    return JSON.parse(coursesJson);
-  } catch (error) {
-    console.error("Failed to parse courses from localStorage", error);
-    // If data is corrupted, clear it and start fresh with defaults.
-    localStorage.removeItem(COURSES_KEY);
-    const defaultCourses = createDefaultCourses();
-    saveCourses(defaultCourses);
-    return defaultCourses;
-  }
+    return storedCourses;
 };
 
 export const saveCourses = (courses: Course[]): void => {
-  try {
-    localStorage.setItem(COURSES_KEY, JSON.stringify(courses));
-  } catch (e: any) {
-    if (e.name === 'QuotaExceededError' || (e.code && (e.code === 22 || e.code === 1014))) {
-      throw new Error('fileTooLargeError');
-    }
-    throw new Error('fileProcessingError');
-  }
+    storedCourses = courses;
 };

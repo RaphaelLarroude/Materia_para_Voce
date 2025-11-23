@@ -37,15 +37,15 @@ const YearSelector: React.FC<YearSelectorProps> = ({ selectedYears = [], onChang
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-200">{t('visibleToYears')}</label>
+      <label className="block text-sm font-medium text-blue-800">{t('visibleToYears')}</label>
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={handleSelectAll}
           className={`px-3 py-1 text-xs rounded-full border transition-colors ${
             isAllSelected
-              ? 'bg-blue-600 border-blue-600 text-white'
-              : 'bg-transparent border-gray-500 text-gray-200 hover:bg-white/10'
+              ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+              : 'bg-white/40 border-blue-300 text-blue-900 hover:bg-blue-50'
           }`}
         >
           {t('allYears')}
@@ -57,8 +57,8 @@ const YearSelector: React.FC<YearSelectorProps> = ({ selectedYears = [], onChang
             onClick={() => handleYearToggle(year)}
             className={`px-3 py-1 text-xs rounded-full border transition-colors ${
               !isAllSelected && selectedYears.includes(year)
-                ? 'bg-blue-600 border-blue-600 text-white'
-                : 'bg-transparent border-gray-500 text-gray-200 hover:bg-white/10'
+                ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                : 'bg-white/40 border-blue-300 text-blue-900 hover:bg-blue-50'
             }`}
           >
             {`${year}º ${t('year')}`}
