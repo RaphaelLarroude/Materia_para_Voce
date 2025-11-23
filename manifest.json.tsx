@@ -1,4 +1,4 @@
-{
+const manifest = {
   "name": "Matéria para Você",
   "short_name": "MV",
   "start_url": "/",
@@ -17,4 +17,5 @@
       "type": "image/png"
     }
   ]
-}
+};
+export default manifest;

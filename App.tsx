@@ -19,7 +19,6 @@ import SimulationBanner from './components/SimulationBanner';
 import FilePreviewModal from './components/modals/FilePreviewModal';
 import SimulationSetupModal from './components/modals/SimulationSetupModal';
 import Footer from './components/Footer';
-import AIChat from './components/AIChat';
 import { useLanguage } from './languageContext';
 import { getUsers, saveUsers, simpleHash } from './utils/auth';
 import { getCourses, saveCourses } from './utils/course';
@@ -634,7 +633,6 @@ const App: React.FC = () => {
             onStart={handleStartSimulation}
         />
     )}
-    <AIChat />
     <Footer />
     </div>
   );
