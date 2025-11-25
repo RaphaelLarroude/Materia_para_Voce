@@ -185,7 +185,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
 
                 <div className="flex justify-center">
                     {[
-                        { title: "Roteiros de Estudos", date: "Aviso", desc: "Faremos roteiros de estudos para provas finais com mais ou menos 1 semana de antecedência, mas só para o 7º ano.", type: "Importante" }
+                        { title: "Novidades", date: "Aviso", desc: "2026 virá com muitas novidades...", type: "Importante" }
                     ].map((notice, idx) => (
                         <div key={idx} className="bg-white/40 rounded-xl p-6 border border-white/50 hover:bg-white/60 transition-colors max-w-2xl w-full">
                             <div className="flex justify-between items-start mb-4">
