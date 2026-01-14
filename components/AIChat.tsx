@@ -24,9 +24,11 @@ const AIChat: React.FC = () => {
   useEffect(() => {
     if (isOpen && !chatSessionRef.current) {
         try {
+            // Using a named parameter as required by the library.
             const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            // Corrected model name based on task type: Basic Text Tasks use 'gemini-3-flash-preview'.
             chatSessionRef.current = ai.chats.create({
-                model: 'gemini-2.5-flash',
+                model: 'gemini-3-flash-preview',
                 config: {
                     systemInstruction: "You are a friendly and helpful AI study assistant for the 'Matéria para Você' learning platform. You act as a tutor, helping students understand concepts, summarizing topics, and answering questions about their courses. Keep your responses concise, encouraging, and formatted with Markdown where appropriate. If asked about the platform, explain you are an AI assistant integrated to help them learn.",
                 }
@@ -49,7 +51,9 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
+        // chatSession.sendMessage correctly receives the message parameter.
         const result = await chatSessionRef.current.sendMessage({ message: userMessage });
+        // result.text is used as a property access, which is the correct method for Extracting Text Output.
         setMessages(prev => [...prev, { role: 'model', text: result.text }]);
     } catch (error) {
         console.error("AI Error", error);

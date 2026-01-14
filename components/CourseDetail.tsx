@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { Course, CourseModule, StudyMaterialCategory, StudyMaterial } from '../types';
 import CourseModuleCard from './CourseModuleCard';
 import { HomeIcon, XIcon, VideoCameraIcon, DocumentIcon, LinkIcon, PencilIcon, TrashIcon, PlusIcon, PhotoIcon } from './icons';
 import { useLanguage } from '../languageContext';
 
-// Reusable card for categories, now with edit/delete buttons for teachers
+// Reusable card for categories
 const StudyMaterialCategoryCard: React.FC<{ category: StudyMaterialCategory, onClick: () => void, isTeacherOwner: boolean, onEdit: () => void, onDelete: () => void }> = ({ category, onClick, isTeacherOwner, onEdit, onDelete }) => {
   const { t } = useLanguage();
   return (
@@ -16,20 +17,20 @@ const StudyMaterialCategoryCard: React.FC<{ category: StudyMaterialCategory, onC
       <div className="absolute inset-0 bg-white/10 group-hover:bg-white/20 transition-colors" />
       {isTeacherOwner && (
         <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-            <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-2 bg-blue-600/80 rounded-full hover:bg-blue-500" aria-label={t('edit')}><PencilIcon className="w-4 h-4 text-white" /></button>
-            <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-2 bg-red-600/80 rounded-full hover:bg-red-500" aria-label={t('delete')}><TrashIcon className="w-4 h-4 text-white" /></button>
+            <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="p-2 bg-blue-600/80 rounded-full hover:bg-blue-500 shadow-sm" aria-label={t('edit')}><PencilIcon className="w-4 h-4 text-white" /></button>
+            <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="p-2 bg-red-600/80 rounded-full hover:bg-red-500 shadow-sm" aria-label={t('delete')}><TrashIcon className="w-4 h-4 text-white" /></button>
         </div>
       )}
       <div className="relative p-3">
         <div className="bg-white/50 backdrop-blur-md p-2 rounded-md inline-block shadow-sm">
-          <h3 className="text-blue-900 text-base font-semibold">{category.title}</h3>
+          <h3 className="text-blue-900 text-sm font-bold uppercase tracking-tight">{category.title}</h3>
         </div>
       </div>
     </div>
   );
 };
 
-// Reusable item for materials, now with edit/delete buttons for teachers
+// Reusable item for materials
 const StudyMaterialItem: React.FC<{ 
     material: StudyMaterial, 
     isTeacherOwner: boolean, 
@@ -47,28 +48,25 @@ const StudyMaterialItem: React.FC<{
   };
 
   const handleItemClick = () => {
-    if (material.type === 'file') {
-      onViewMaterial(material);
-    } else {
-      window.open(material.content, '_blank', 'noopener,noreferrer');
-    }
+    if (material.type === 'file') onViewMaterial(material);
+    else window.open(material.content, '_blank', 'noopener,noreferrer');
   };
 
   return (
-    <li className="flex items-center p-4 bg-white/30 rounded-lg group hover:bg-white/40 transition-colors border border-white/20">
+    <li className="flex items-center p-4 bg-white/30 rounded-2xl group hover:bg-white/50 transition-all border border-white/20 shadow-sm">
       <button onClick={handleItemClick} className="flex items-center min-w-0 flex-grow text-left">
-        <div className="flex-shrink-0 mr-4">{getIconForMaterial(material)}</div>
+        <div className="flex-shrink-0 mr-4 p-2 bg-white/60 rounded-xl shadow-sm">{getIconForMaterial(material)}</div>
         <div className="min-w-0">
-          <span className="font-medium text-blue-900 truncate block">{material.title}</span>
+          <span className="font-bold text-blue-900 truncate block text-sm sm:text-base">{material.title}</span>
           {material.type === 'file' && material.fileName && (
-              <span className="text-xs text-blue-700 truncate hidden sm:inline">({material.fileName})</span>
+              <span className="text-[10px] text-blue-400 font-black uppercase truncate block">{material.fileName}</span>
           )}
         </div>
       </button>
       {isTeacherOwner && (
-        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-4">
-            <button onClick={onEdit} className="p-2 hover:bg-blue-100/50 rounded-full" aria-label={t('edit')}><PencilIcon className="w-5 h-5 text-blue-600" /></button>
-            <button onClick={onDelete} className="p-2 hover:bg-red-100/50 rounded-full" aria-label={t('delete')}><TrashIcon className="w-5 h-5 text-red-500" /></button>
+        <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-4">
+            <button onClick={onEdit} className="p-2 hover:bg-blue-100/50 rounded-xl text-blue-600 transition-all" aria-label={t('edit')}><PencilIcon className="w-5 h-5" /></button>
+            <button onClick={onDelete} className="p-2 hover:bg-red-100/50 rounded-xl text-red-500 transition-all" aria-label={t('delete')}><TrashIcon className="w-5 h-5" /></button>
         </div>
       )}
     </li>
@@ -105,13 +103,12 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
   const backToCategoryList = (e: React.MouseEvent) => { e.preventDefault(); setSelectedCategory(null); };
 
   const renderContent = () => {
-    // Level 3: Materials View
     if (selectedModule && selectedCategory) {
       return (
-        <>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-blue-900">{selectedCategory.title}</h1>
-          <div className="bg-white/30 backdrop-blur-lg border border-white/40 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <ul className="space-y-3">
+        <div className="animate-fade-in-up">
+          <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-black mb-8 text-blue-900 tracking-tighter">{selectedCategory.title}</h2>
+          <div className="bg-white/30 backdrop-blur-lg border border-white/40 rounded-[2.5rem] p-5 sm:p-8 shadow-2xl">
+            <ul className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {(selectedCategory.materials || []).map((material) => (
                 <StudyMaterialItem key={material.id} material={material} isTeacherOwner={isTeacherOwner}
                   onViewMaterial={onViewMaterial}
@@ -120,29 +117,25 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
               ))}
             </ul>
             {(!selectedCategory.materials || selectedCategory.materials.length === 0) && (
-              <p className="text-center text-blue-800 py-8">{t('noMaterialsInCategory')}</p>
+              <p className="text-center text-blue-400 font-black uppercase tracking-widest py-16">{t('noMaterialsInCategory')}</p>
             )}
              {isTeacherOwner && (
-              <div className="mt-6 text-center">
-                <button onClick={() => handlers.onAddMaterial(selectedCategory.id)} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+              <div className="mt-10 text-center">
+                <button onClick={() => handlers.onAddMaterial(selectedCategory.id)} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-black py-3 px-8 rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-200">
                   <PlusIcon className="w-5 h-5" /> {t('addMaterial')}
                 </button>
               </div>
             )}
           </div>
-        </>
+        </div>
       );
     }
     
-    // Level 2: Categories View
     if (selectedModule) {
       return (
-        <>
-         <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-blue-900">{selectedModule.title}</h1>
-         {selectedModule.categories?.length === 0 && isTeacherOwner && (
-            <p className="text-center text-blue-800 mb-6">{t('noCategoriesInModule')}</p>
-         )}
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="animate-fade-in-up">
+         <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-black mb-8 text-blue-900 tracking-tighter">{selectedModule.title}</h2>
+         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             {(selectedModule.categories || []).map((category) => (
               <StudyMaterialCategoryCard key={category.id} category={category} onClick={() => handleCategoryClick(category)} isTeacherOwner={isTeacherOwner} 
                 onEdit={() => handlers.onEditCategory(selectedModule.id, category)}
@@ -150,24 +143,20 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
             ))}
           </div>
            {isTeacherOwner && (
-              <div className="mt-8 text-center">
-                 <button onClick={() => handlers.onAddCategory(selectedModule.id)} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+              <div className="mt-10 text-center">
+                 <button onClick={() => handlers.onAddCategory(selectedModule.id)} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-black py-3 px-8 rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl">
                   <PlusIcon className="w-5 h-5" /> {t('addCategory')}
                 </button>
               </div>
             )}
-        </>
+        </div>
       );
     }
 
-    // Level 1: Modules View
     return (
-      <>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8 text-blue-900">{course.title}</h1>
-        {course.content?.length === 0 && isTeacherOwner && (
-            <p className="text-center text-blue-800 mb-6">{t('noModulesInCourse')}</p>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="animate-fade-in-up">
+        <h2 className="text-3xl md:text-4xl 2xl:text-5xl font-black mb-8 text-blue-900 tracking-tighter">{course.title}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
           {course.content.map((module) => (
             <CourseModuleCard key={module.id} module={module} onClick={() => handleModuleClick(module)} isTeacherOwner={isTeacherOwner}
               onEdit={() => handlers.onEditModule(module)}
@@ -175,41 +164,41 @@ const CourseDetail: React.FC<CourseDetailProps> = (props) => {
           ))}
         </div>
          {isTeacherOwner && (
-              <div className="mt-8 text-center">
-                 <button onClick={handlers.onAddModule} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+              <div className="mt-10 text-center">
+                 <button onClick={handlers.onAddModule} className="flex items-center gap-2 mx-auto bg-blue-600 text-white font-black py-3 px-8 rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl">
                   <PlusIcon className="w-5 h-5" /> {t('addModule')}
                 </button>
               </div>
           )}
-      </>
+      </div>
     );
   }
 
   return (
     <div className="w-full text-blue-900 animate-fade-in">
-      <header className="flex justify-between items-center mb-6">
-        <nav aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-sm text-blue-800 bg-white/20 backdrop-blur-md p-2 rounded-lg flex-wrap border border-white/10">
-            <li><a href="#" onClick={backToCourseList} className="flex items-center hover:text-blue-600"><HomeIcon className="h-4 w-4 mr-2" />{t('panel')}</a></li>
-            <li><span className="text-blue-400">/</span></li>
-            <li><a href="#" onClick={backToCourseList} className="hover:text-blue-600">{t('myCourses')}</a></li>
-            <li><span className="text-blue-400">/</span></li>
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 lg:mb-12 gap-6">
+        <nav aria-label="Breadcrumb" className="w-full max-w-full overflow-x-auto no-scrollbar pb-1">
+          <ol className="flex items-center space-x-2 text-[10px] sm:text-xs text-blue-800 bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/50 shadow-lg whitespace-nowrap min-w-max">
+            <li><a href="#" onClick={backToCourseList} className="flex items-center hover:text-blue-600 font-black transition-colors uppercase tracking-widest"><HomeIcon className="h-4 w-4 mr-2" />{t('panel')}</a></li>
+            <li><span className="text-blue-300 font-black">/</span></li>
+            <li><a href="#" onClick={backToCourseList} className="hover:text-blue-600 font-black transition-colors uppercase tracking-widest">{t('myCourses')}</a></li>
+            <li><span className="text-blue-300 font-black">/</span></li>
             {selectedModule ? (
               <>
-                <li><a href="#" onClick={backToModuleList} className="hover:text-blue-600 truncate max-w-[100px] sm:max-w-xs">{course.title}</a></li>
-                <li><span className="text-blue-400">/</span></li>
+                <li><a href="#" onClick={backToModuleList} className="hover:text-blue-600 font-black transition-colors uppercase tracking-widest max-w-[120px] truncate">{course.title}</a></li>
+                <li><span className="text-blue-300 font-black">/</span></li>
                 {selectedCategory ? (
                    <>
-                    <li><a href="#" onClick={backToCategoryList} className="hover:text-blue-600 truncate max-w-[100px] sm:max-w-xs">{selectedModule.title}</a></li>
-                    <li><span className="text-blue-400">/</span></li>
-                    <li className="font-semibold text-blue-900 truncate max-w-[100px] sm:max-w-xs" aria-current="page">{selectedCategory.title}</li>
+                    <li><a href="#" onClick={backToCategoryList} className="hover:text-blue-600 font-black transition-colors uppercase tracking-widest max-w-[120px] truncate">{selectedModule.title}</a></li>
+                    <li><span className="text-blue-300 font-black">/</span></li>
+                    <li className="font-black text-blue-900 uppercase tracking-widest max-w-[150px] truncate" aria-current="page">{selectedCategory.title}</li>
                    </>
-                ) : ( <li className="font-semibold text-blue-900 truncate max-w-[100px] sm:max-w-xs" aria-current="page">{selectedModule.title}</li> )}
+                ) : ( <li className="font-black text-blue-900 uppercase tracking-widest max-w-[150px] truncate" aria-current="page">{selectedModule.title}</li> )}
               </>
-            ) : ( <li className="font-semibold text-blue-900 truncate max-w-[100px] sm:max-w-xs" aria-current="page">{course.title}</li> )}
+            ) : ( <li className="font-black text-blue-900 uppercase tracking-widest max-w-[150px] truncate" aria-current="page">{course.title}</li> )}
           </ol>
         </nav>
-        <button onClick={onBack} className="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/20 text-blue-900" aria-label={t('closeCourseDetails')}><XIcon className="h-5 w-5" /></button>
+        <button onClick={onBack} className="p-3.5 rounded-full bg-red-100/80 hover:bg-red-200 backdrop-blur-md border border-red-200 text-red-500 transition-all shrink-0 shadow-lg" aria-label={t('closeCourseDetails')}><XIcon className="h-6 w-6" /></button>
       </header>
       {renderContent()}
     </div>

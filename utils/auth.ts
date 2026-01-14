@@ -1,4 +1,7 @@
+
 import { StoredUser } from '../types';
+
+const USERS_KEY = 'mpv_users';
 
 export const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
@@ -27,13 +30,20 @@ const createDefaultTeacher = (): StoredUser => ({
     classroom: 'A',
 });
 
-// In-memory storage
-let storedUsers: StoredUser[] = [createDefaultTeacher()];
-
 export const getUsers = (): StoredUser[] => {
-    return storedUsers;
+    const saved = localStorage.getItem(USERS_KEY);
+    if (!saved) {
+        const defaults = [createDefaultTeacher()];
+        saveUsers(defaults);
+        return defaults;
+    }
+    try {
+        return JSON.parse(saved);
+    } catch {
+        return [createDefaultTeacher()];
+    }
 };
 
 export const saveUsers = (users: StoredUser[]): void => {
-  storedUsers = users;
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };

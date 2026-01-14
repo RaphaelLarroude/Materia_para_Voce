@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -12,20 +13,112 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- html2canvas for PNG Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- jsPDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <!-- PWA/IOS FULLSCREEN -->
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <!-- Ícone Apple (você pode baixar e hospedar uma versão PNG com fundo transparente no tamanho 192x192 ou usar o SVG convertido) -->
     <link rel="apple-touch-icon" sizes="192x192" href="caminho/para/icone-192x192.png">
 
     <style>
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+      
+      .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+      .animate-fade-in-up { animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .animate-slide-in-right { animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
       body {
         background-image: url('https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
         min-height: 100vh;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+      /* Estilos para Impressão */
+      @media print {
+        @page {
+          size: portrait;
+          margin: 10mm;
+        }
+
+        body {
+          background: white !important;
+          background-image: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        /* Esconde tudo que não for o cronograma */
+        body > *:not(#root) {
+          display: none !important;
+        }
+
+        #root > *:not(.fixed) {
+           display: none !important;
+        }
+
+        .print\:hidden, 
+        button, 
+        nav, 
+        footer, 
+        .backdrop-blur-sm, 
+        .backdrop-blur-md, 
+        .backdrop-blur-xl {
+          display: none !important;
+        }
+
+        #planner-modal-overlay {
+          position: static !important;
+          background: white !important;
+          overflow: visible !important;
+          height: auto !important;
+        }
+
+        #planner-export-content {
+          padding: 0 !important;
+          margin: 0 !important;
+          width: 100% !important;
+          background: white !important;
+          position: relative !important;
+        }
+
+        /* Garante que o grid apareça corretamente */
+        table {
+          width: 100% !important;
+          border-collapse: collapse !important;
+          table-layout: fixed !important;
+        }
+
+        th, td {
+          border: 1px solid #ddd !important;
+          page-break-inside: avoid !important;
+        }
+
+        .rounded-[3rem], .rounded-2xl, .rounded-xl {
+          border-radius: 8px !important;
+          border: 1px solid #eee !important;
+        }
+
+        /* Estilo para garantir visibilidade dos textos das atividades */
+        [class*="bg-"] {
+           -webkit-print-color-adjust: exact !important;
+           print-color-adjust: exact !important;
+        }
       }
     </style>
 

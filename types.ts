@@ -1,3 +1,4 @@
+
 import type { ComponentType } from 'react';
 
 export type Classroom = 'A' | 'B' | 'C' | 'D' | 'E';
@@ -89,3 +90,10 @@ export interface SidebarLink {
 }
 
 export type Language = 'PT_BR' | 'EN' | 'ES';
+
+export interface SubjectDifficulty {
+  name: string;
+  level: number;
+}
+
+export type StudyPlanType = 'routine' | 'cycle';

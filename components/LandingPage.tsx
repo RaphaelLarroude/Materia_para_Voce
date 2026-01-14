@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { User } from '../types';
 import Auth from './Auth';
@@ -6,11 +7,14 @@ import {
     AcademicCapIcon, 
     MenuIcon, 
     XIcon, 
-    CalendarIcon,
+    // Fix: CalendarIcon was not exported from icons, using CalendarDaysIcon instead
+    CalendarDaysIcon,
     UserGroupIcon,
-    MegaphoneIcon,
+    BellIcon,
     CheckIcon,
-    AppLogoIcon
+    AppLogoIcon,
+    SparklesIcon,
+    ArrowRightIcon
 } from './icons';
 import Footer from './Footer';
 
@@ -134,10 +138,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                     
                     <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-12">
                         <button 
-                            onClick={() => scrollToSection('hub')}
+                            onClick={() => openAuthModal('signup')}
                             className="px-8 py-4 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition-transform hover:scale-105 flex items-center gap-2"
                         >
-                            Começar Agora <AcademicCapIcon className="w-5 h-5"/>
+                            Começar Agora <ArrowRightIcon className="w-5 h-5"/>
                         </button>
                         <button 
                             onClick={() => scrollToSection('sobre')}
@@ -179,7 +183,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400"></div>
                 
                 <h2 className="text-3xl font-bold text-center mb-10 text-blue-900 flex items-center justify-center gap-3">
-                    <MegaphoneIcon className="w-8 h-8 text-blue-600"/>
+                    <BellIcon className="w-8 h-8 text-blue-600"/>
                     Quadro de Avisos
                 </h2>
 
@@ -190,7 +194,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                         <div key={idx} className="bg-white/40 rounded-xl p-6 border border-white/50 hover:bg-white/60 transition-colors max-w-2xl w-full">
                             <div className="flex justify-between items-start mb-4">
                                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 uppercase tracking-wider">{notice.type}</span>
-                                <span className="text-sm font-medium text-blue-500 flex items-center gap-1"><CalendarIcon className="w-3 h-3"/> {notice.date}</span>
+                                {/* Fix: CalendarIcon changed to CalendarDaysIcon */}
+                                <span className="text-sm font-medium text-blue-500 flex items-center gap-1"><CalendarDaysIcon className="w-3 h-3"/> {notice.date}</span>
                             </div>
                             <h3 className="font-bold text-lg text-blue-900 mb-2">{notice.title}</h3>
                             <p className="text-blue-800 text-sm leading-relaxed">{notice.desc}</p>
@@ -209,7 +214,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                     <h2 className="text-4xl font-bold text-blue-900 mb-6">Sobre a Metodologia</h2>
                     <div className="space-y-6 text-blue-800 leading-relaxed">
                         <p className="bg-white/30 p-4 rounded-xl border border-white/40">
-                            O <strong>Matéria para Você</strong> nasceu da necessidade de centralizar o conhecimento. Inspirado nas melhores práticas de LMS (Learning Management Systems), oferecemos uma estrutura clara onde o aluno sabe exatamente o que estudar.
+                            O <strong>Matéria para Você</strong> nasceu da necessidade de centralizar o conhecimento. Inspirado nas melhores práticas de LMS (Learning Management Systems), oferecemos uma estrutura clara onde o aluno sabe exactly o que estudar.
                         </p>
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3">
@@ -243,9 +248,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                 <div className="relative z-10">
                     <h2 className="text-3xl md:text-5xl font-bold mb-6">Hub Digital</h2>
                     <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
-                        Conecte-se com a comunidade, acesse conteúdos exclusivos e gerencie seus estudos. Tudo pronto para você começar?
+                        Conecte-se com a comunidade, acesse conteúdos exclusivos e gerencie seus estudos com nosso novo Planejador Inteligente.
                     </p>
                     
+                    <div className="grid sm:grid-cols-2 gap-6 mb-12">
+                        <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-left">
+                            <SparklesIcon className="w-8 h-8 text-yellow-400 mb-4" />
+                            <h3 className="font-bold text-xl mb-2">{t('studyPlanner')}</h3>
+                            <p className="text-blue-100 text-sm mb-4">{t('studyPlannerDesc')}</p>
+                            <button onClick={() => openAuthModal('signup')} className="text-white font-bold flex items-center gap-2 hover:gap-3 transition-all">
+                                Criar minha rotina <CheckIcon className="w-4 h-4"/>
+                            </button>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-left">
+                            <AcademicCapIcon className="w-8 h-8 text-green-400 mb-4" />
+                            <h3 className="font-bold text-xl mb-2">Cursos & Materiais</h3>
+                            <p className="text-blue-100 text-sm mb-4">Acesse roteiros e PDFs postados pelos seus professores em tempo real.</p>
+                             <button onClick={() => openAuthModal('login')} className="text-white font-bold flex items-center gap-2 hover:gap-3 transition-all">
+                                Explorar cursos <CheckIcon className="w-4 h-4"/>
+                            </button>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                          <button 
                             onClick={() => openAuthModal('login')}
@@ -257,10 +281,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLoginSuccess }) => {
                             onClick={() => openAuthModal('signup')}
                             className="px-8 py-4 bg-blue-700 text-white font-bold rounded-xl border border-blue-400 hover:bg-blue-600 transition-transform hover:scale-105"
                         >
-                            Criar Conta Grátis
+                            Criar Conta
                         </button>
                     </div>
-                    <p className="mt-6 text-sm text-blue-200">Junte-se a nós hoje mesmo.</p>
                 </div>
             </div>
         </div>

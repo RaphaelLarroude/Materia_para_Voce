@@ -1,5 +1,4 @@
 
-
 import { Language as AppLanguage } from './types';
 
 export const translations = {
@@ -50,7 +49,24 @@ export const translations = {
     selectYearToSimulate: 'Selecione um ano para simular',
     selectClassroomToSimulate: 'Selecione uma sala para simular',
     simulatingAs: 'Simulando como Ano {year}º, Sala {classroom}',
+    studyPlanner: 'Planejador de Estudos',
+    studyPlannerDesc: 'Crie seu ciclo ou rotina personalizada com IA.',
 
+    // Study Planner
+    studyCycle: 'Ciclo de Estudos',
+    studyRoutine: 'Rotina de Estudos',
+    subjectDifficulty: 'Dificuldade por Matéria',
+    extraActivities: 'Atividades fora do colégio',
+    extraActivitiesPlaceholder: 'Ex: Natação às 15h, Curso de Inglês às 18h...',
+    weekendStudy: 'Estudar no Final de Semana?',
+    saturday: 'Sábado',
+    sunday: 'Domingo',
+    generatePlan: 'Gerar Plano com IA',
+    generating: 'Gerando seu plano...',
+    yourPlan: 'Seu Plano Personalizado',
+    difficultyLevel: 'Nível: {level}',
+    weekendRoutineTitle: 'Rotina no Fim de Semana',
+    weekendRoutineDesc: 'Manter horários de sono e refeições no Sábado e Domingo?',
 
     // Course Card
     notStartedYet: 'Ainda não iniciado',
@@ -197,6 +213,10 @@ export const translations = {
     // Footer
     copyrightNotice: '© {year} Raphael Costa. Todos os direitos reservados.',
     madeFor: 'Feito para o site Matéria para Você.',
+    welcomeAI: 'Olá! Sou seu assistente de estudos. Como posso te ajudar hoje?',
+    askAnything: 'Pergunte qualquer coisa sobre seus estudos...',
+    errorOccurred: 'Desculpe, ocorreu um erro ao processar sua solicitação.',
+    aiAssistant: 'Assistente IA',
   },
   'EN': {
     // Auth
@@ -245,6 +265,24 @@ export const translations = {
     selectYearToSimulate: 'Select a year to simulate',
     selectClassroomToSimulate: 'Select a classroom to simulate',
     simulatingAs: 'Simulating as Year {year}, Classroom {classroom}',
+    studyPlanner: 'Study Planner',
+    studyPlannerDesc: 'Create your custom study cycle or routine with AI.',
+
+    // Study Planner
+    studyCycle: 'Study Cycle',
+    studyRoutine: 'Study Routine',
+    subjectDifficulty: 'Difficulty per Subject',
+    extraActivities: 'Extracurricular Activities',
+    extraActivitiesPlaceholder: 'Ex: Swimming at 3 PM, English course at 6 PM...',
+    weekendStudy: 'Study on Weekends?',
+    saturday: 'Saturday',
+    sunday: 'Sunday',
+    generatePlan: 'Generate Plan with AI',
+    generating: 'Generating your plan...',
+    yourPlan: 'Your Personalized Plan',
+    difficultyLevel: 'Level: {level}',
+    weekendRoutineTitle: 'Weekend Routine',
+    weekendRoutineDesc: 'Maintain fixed sleep and meal times on Saturday and Sunday?',
 
     // Course Card
     notStartedYet: 'Not started yet',
@@ -388,6 +426,10 @@ export const translations = {
     // Footer
     copyrightNotice: '© {year} Raphael Costa. All rights reserved.',
     madeFor: 'Made for the Matéria para Você website.',
+    welcomeAI: 'Hello! I am your study assistant. How can I help you today?',
+    askAnything: 'Ask anything about your studies...',
+    errorOccurred: 'Sorry, an error occurred while processing your request.',
+    aiAssistant: 'AI Assistant',
   },
   'ES': {
     // Auth
@@ -424,9 +466,9 @@ export const translations = {
     simulateStudentView: 'Simular Vista de Alumno',
 
     // App
-    myCoursesAsStudent: 'Mis Cursos Como Alumno',
+    myCoursesAsStudent: 'Mis Cursos Como Aluno',
     teacherDashboard: 'Panel del Profesor',
-    studentDashboardSimulation: 'Panel del Estudiante (Simulación)',
+    studentDashboardSimulation: 'Panel del Estudiante (Simulação)',
     createCourse: 'Crear Nuevo Curso',
     noCoursesCreated: 'Aún no has creado ningún curso.',
     simulationActive: 'Estás simulando la vista de un alumno.',
@@ -436,7 +478,25 @@ export const translations = {
     selectYearToSimulate: 'Selecciona un año para simular',
     selectClassroomToSimulate: 'Selecciona una clase para simular',
     simulatingAs: 'Simulando como Año {year}, Clase {classroom}',
+    studyPlanner: 'Planificador de Estudos',
+    studyPlannerDesc: 'Crea tu ciclo o rutina personalizada con IA.',
     
+    // Study Planner
+    studyCycle: 'Ciclo de Estudos',
+    studyRoutine: 'Rutina de Estudos',
+    subjectDifficulty: 'Dificultad por Materia',
+    extraActivities: 'Actividades extracurriculares',
+    extraActivitiesPlaceholder: 'Ej: Natación a las 15:00, Curso de Inglés a las 18:00...',
+    weekendStudy: '¿Estudiar los Fines de Semana?',
+    saturday: 'Sábado',
+    sunday: 'Domingo',
+    generatePlan: 'Generar Plan con IA',
+    generating: 'Generando tu plan...',
+    yourPlan: 'Tu Plan Personalizado',
+    difficultyLevel: 'Nivel: {level}',
+    weekendRoutineTitle: 'Rutina de Fin de Semana',
+    weekendRoutineDesc: '¿Mantener horarios fijos de sueño y comidas los sábados y domingos?',
+
     // Course Card
     notStartedYet: 'Aún no ha comenzado',
     completed: '% completo',
@@ -470,7 +530,7 @@ export const translations = {
     nextMonth: 'Próximo mes',
     sidebarNavLinks: 'Enlaces de navegación de la barra lateral',
     changePassword: 'CAMBIAR CONTRASEÑA',
-    accessEmail: 'ACCESO AL CORREO ELECTRÓNICO',
+    accessEmail: 'ACESSO AL CORREO ELECTRÓNICO',
     accessCanva: 'ACCESO A CANVA',
     accessPadlet: 'ACCESO A PADLET',
     downloadTeams: 'DESCARGAR TEAMS',
@@ -579,10 +639,12 @@ export const translations = {
     // Footer
     copyrightNotice: '© {year} Raphael Costa. Todos los derechos reservados.',
     madeFor: 'Hecho para el sitio web Matéria para Você.',
+    welcomeAI: '¡Hola! Soy tu asistente de estudios. ¿Cómo puedo ayudarte hoy?',
+    askAnything: 'Pregunta cualquier cosa sobre tus estudios...',
+    errorOccurred: 'Lo sentimos, ocurrió un error al procesar tu solicitud.',
+    aiAssistant: 'Asistente IA',
   }
 };
-
-export type Language = keyof typeof translations;
 
 export const localeMap: Record<AppLanguage, string> = {
     'PT_BR': 'pt-BR',

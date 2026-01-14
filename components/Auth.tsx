@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '../languageContext';
 import { User, Classroom, SchoolYear, StoredUser } from '../types';
@@ -68,7 +69,7 @@ const Auth: React.FC<AuthProps> = ({ onLoginSuccess, initialMode, onClose }) => 
           id: generateId(),
           name,
           email,
-          role: 'student',
+          role: email.toLowerCase() === 'rapha@raphaelcosta.com.br' ? 'teacher' : 'student',
           isActive: true,
           passwordHash: simpleHash(password),
           year: year as SchoolYear,
@@ -91,6 +92,12 @@ const Auth: React.FC<AuthProps> = ({ onLoginSuccess, initialMode, onClose }) => 
             setIsLoading(false);
             return;
         }
+
+        // Reforço: garantir que o admin sempre tenha o cargo correto
+        if (user.email.toLowerCase() === 'rapha@raphaelcosta.com.br') {
+            user.role = 'teacher';
+        }
+
         const { passwordHash, ...userForSession } = user;
         onLoginSuccess(userForSession);
       }
