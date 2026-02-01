@@ -26,7 +26,7 @@ import { getCourses, saveCourses } from './utils/course';
 import { getLinks, saveLinks } from './utils/links';
 import { getEvents, saveEvents } from './utils/calendar';
 import { generateId } from './utils/auth';
-import { PlusIcon, SparklesIcon, PinFilledIcon } from './components/icons';
+import { PlusIcon, SparklesIcon, PinFilledIcon, CalendarDaysIcon } from './components/icons';
 import LandingPage from './components/LandingPage';
 import AIChat from './components/AIChat';
 
@@ -49,6 +49,7 @@ const App: React.FC = () => {
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [isUserManagementVisible, setIsUserManagementVisible] = useState(false);
   const [isStudyPlannerOpen, setIsStudyPlannerOpen] = useState(false);
+  const [plannerToOpen, setPlannerToOpen] = useState<{blocks: any[], theme: string} | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [simulationContext, setSimulationContext] = useState<{ year: SchoolYear, classroom: Classroom } | null>(null);
 
@@ -71,8 +72,8 @@ const App: React.FC = () => {
   const [isSimulationModalOpen, setIsSimulationModalOpen] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
 
-  // Pinned Schedule
-  const [pinnedSchedule, setPinnedSchedule] = useState<{blocks: any[], theme: string} | null>(null);
+  // Saved Planner
+  const [savedPlanner, setSavedPlanner] = useState<{blocks: any[], theme: string} | null>(null);
 
   const { t } = useLanguage();
 
@@ -88,9 +89,9 @@ const App: React.FC = () => {
       setSidebarLinks(allLinks);
       setCalendarEvents(allEvents);
 
-      const savedPin = localStorage.getItem('mpv_pinned_schedule');
-      if (savedPin) {
-          try { setPinnedSchedule(JSON.parse(savedPin)); } catch (e) { console.error(e); }
+      const saved = localStorage.getItem('mpv_saved_planner');
+      if (saved) {
+          try { setSavedPlanner(JSON.parse(saved)); } catch (e) { console.error(e); }
       }
 
       const savedUserStr = localStorage.getItem('mpv_current_user');
@@ -125,11 +126,23 @@ const App: React.FC = () => {
   const updateLinks = (updatedLinks: SidebarLink[]) => { setSidebarLinks(updatedLinks); saveLinks(updatedLinks); }
   const updateEvents = (updatedEvents: CalendarEvent[]) => { setCalendarEvents(updatedEvents); saveEvents(updatedEvents); };
 
-  const handlePinSchedule = (blocks: any[], theme: string) => {
-    const pinData = { blocks, theme };
-    setPinnedSchedule(pinData);
-    localStorage.setItem('mpv_pinned_schedule', JSON.stringify(pinData));
+  const handleSavePlanner = (blocks: any[], theme: string) => {
+    const plannerData = { blocks, theme };
+    setSavedPlanner(plannerData);
+    localStorage.setItem('mpv_saved_planner', JSON.stringify(plannerData));
     setIsStudyPlannerOpen(false);
+  };
+
+  const openLastPlanner = () => {
+      if (savedPlanner) {
+          setPlannerToOpen(savedPlanner);
+          setIsStudyPlannerOpen(true);
+      }
+  };
+
+  const handleClosePlanner = () => {
+      setIsStudyPlannerOpen(false);
+      setPlannerToOpen(null);
   };
 
   const isTeacherView = !simulationContext && currentUser?.role === 'teacher';
@@ -237,11 +250,18 @@ const App: React.FC = () => {
                 <h1 className="text-3xl md:text-4xl 2xl:text-5xl font-black text-blue-900 tracking-tighter">
                   {dashboardTitle}
                 </h1>
-                <div className="flex gap-3 w-full sm:w-auto">
+                <div className="flex flex-wrap gap-3 w-full sm:w-auto">
                     {!isTeacherView && (
-                        <button onClick={() => setIsStudyPlannerOpen(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-black py-3 px-8 rounded-2xl hover:shadow-2xl transition-all active:scale-95 shadow-xl shadow-blue-200">
-                            <SparklesIcon className="w-5 h-5"/> {t('studyPlanner')}
-                        </button>
+                        <>
+                            <button onClick={() => setIsStudyPlannerOpen(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-black py-3 px-8 rounded-2xl hover:shadow-2xl transition-all active:scale-95 shadow-xl shadow-blue-200">
+                                <SparklesIcon className="w-5 h-5"/> {t('studyPlanner')}
+                            </button>
+                            {savedPlanner && (
+                                <button onClick={openLastPlanner} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white text-blue-600 font-black py-3 px-8 rounded-2xl hover:bg-blue-50 transition-all active:scale-95 shadow-lg border border-blue-100">
+                                    <CalendarDaysIcon className="w-5 h-5"/> {t('yourLastPlanner')}
+                                </button>
+                            )}
+                        </>
                     )}
                     {isTeacherView && (
                       <button onClick={() => setIsCourseModalOpen(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-blue-600 text-white font-black py-3 px-8 rounded-2xl hover:bg-blue-700 transition-all active:scale-95 shadow-xl shadow-blue-200">
@@ -250,44 +270,6 @@ const App: React.FC = () => {
                     )}
                 </div>
               </div>
-
-              {/* Hub de Cronograma - Posicionamento Centralizado e Refinado */}
-              {pinnedSchedule && !isTeacherView && !searchQuery && (
-                  <div className="mb-12 bg-white/40 backdrop-blur-2xl border border-white/60 rounded-[3rem] p-6 sm:p-10 shadow-2xl relative overflow-hidden group transition-all duration-500 print:hidden mx-auto max-w-7xl">
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 border-b border-blue-100 pb-6">
-                          <div className="flex items-center gap-5">
-                              <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-xl rotate-3 group-hover:rotate-0 transition-transform">
-                                  <PinFilledIcon className="w-7 h-7" />
-                              </div>
-                              <div>
-                                <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-blue-900 leading-none">Meu Painel Semanal</h2>
-                                <p className="text-xs text-blue-500 font-bold uppercase tracking-widest mt-1">Organização em Tempo Real</p>
-                              </div>
-                          </div>
-                          <button onClick={() => setIsStudyPlannerOpen(true)} className="text-blue-600 font-black hover:bg-blue-50 px-6 py-2.5 rounded-full border border-blue-200 transition-all text-xs uppercase tracking-widest bg-white/50">Abrir Planejador</button>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 lg:gap-5">
-                          {['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'].map(day => (
-                             <div key={day} className="bg-white/60 p-4 rounded-3xl border border-white shadow-lg shadow-blue-900/5 hover:scale-[1.02] transition-transform">
-                                <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3 border-b border-blue-50 pb-2">{day}</p>
-                                <div className="space-y-2 min-h-[60px]">
-                                    {pinnedSchedule.blocks.filter(b => b.day.includes(day)).slice(0, 2).map(b => (
-                                        <div key={b.id} className="text-[9px] font-black text-blue-900 truncate bg-blue-50/50 px-2.5 py-2 rounded-xl border border-white shadow-sm">
-                                            <span className="text-blue-400 mr-1.5">{b.startTime}</span>
-                                            {b.activity}
-                                        </div>
-                                    ))}
-                                    {pinnedSchedule.blocks.filter(b => b.day.includes(day)).length === 0 && (
-                                        <div className="h-full flex items-center justify-center opacity-20">
-                                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
-                                        </div>
-                                    )}
-                                </div>
-                             </div>
-                          ))}
-                      </div>
-                  </div>
-              )}
 
               {filteredCourses.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8">
@@ -330,7 +312,7 @@ const App: React.FC = () => {
               onDeleteCategory={(mid, cid) => updateCourses(courses.map(c => c.id === selectedCourse.id ? {...c, content: c.content.map(m => m.id === mid ? {...m, categories: m.categories.filter(ca => ca.id !== cid)} : m)} : c))}
               onAddMaterial={(cid) => { setParentId(cid); setIsMaterialModalOpen(true); }}
               onEditMaterial={(cid, mat) => { setParentId(cid); setEditingMaterial(mat); setIsMaterialModalOpen(true); }}
-              onDeleteMaterial={(cid, mid) => updateCourses(courses.map(c => c.id === selectedCourse.id ? {...c, content: c.content.map(m => ({...m, categories: m.categories.map(ca => ca.id === cid ? {...ca, materials: ca.materials.filter(ma => ma.id !== mid)} : ca)}))} : c))}
+              onDeleteMaterial={(cid, mid) => updateCourses(courses.map(c => c.id === selectedCourse.id ? {...c, content: c.content.map(m => ({...m, categories: m.categories.map(ca => ca.id === parentId ? {...ca, materials: ca.materials.filter(ma => ma.id !== mid)} : ca)}))} : c))}
               onViewMaterial={setViewingMaterial}
             />
           </main>
@@ -343,7 +325,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Modais Adaptativos */}
-      {isStudyPlannerOpen && <StudyPlanner onClose={() => setIsStudyPlannerOpen(false)} courses={courses} onPinToHub={handlePinSchedule} />}
+      {isStudyPlannerOpen && <StudyPlanner onClose={handleClosePlanner} courses={courses} onSavePlanner={handleSavePlanner} initialData={plannerToOpen} />}
       {viewingMaterial && <FilePreviewModal material={viewingMaterial} onClose={() => setViewingMaterial(null)}/>}
       {isCalendarVisible && <FullCalendarView onClose={() => setIsCalendarVisible(false)} events={visibleCalendarEvents} isTeacher={isTeacherView} courses={courses} onAddEvent={(d) => { setSelectedDateForEvent(d); setEditingEvent(null); setIsEventModalOpen(true); }} onEditEvent={(e) => { setEditingEvent(e); setIsEventModalOpen(true); }} onDeleteEvent={(id) => updateEvents(calendarEvents.filter(e => e.id !== id))}/>}
       {isUserManagementVisible && <UserManagement users={users} currentUser={currentUser} onUpdateUser={handleUpdateUser} onDeleteUser={handleDeleteUser} onClose={() => setIsUserManagementVisible(false)} />}
@@ -352,7 +334,7 @@ const App: React.FC = () => {
       {isCategoryModalOpen && <CategoryFormModal isOpen={isCategoryModalOpen} onClose={() => setIsCategoryModalOpen(false)} onSave={(d) => { const updated = courses.map(c => c.id === selectedCourse!.id ? { ...c, content: c.content.map(m => m.id === parentId ? { ...m, categories: editingCategory ? m.categories.map(ca => ca.id === editingCategory.id ? {...ca, ...d} : ca) : [...m.categories, {...d, id: generateId(), materials: []}] } : m) } : c); updateCourses(updated); setSelectedCourse(updated.find(c => c.id === selectedCourse!.id)!); setIsCategoryModalOpen(false); }} categoryToEdit={editingCategory}/>}
       {isMaterialModalOpen && <MaterialFormModal isOpen={isMaterialModalOpen} onClose={() => setIsMaterialModalOpen(false)} onSave={async (d) => { const updated = courses.map(c => c.id === selectedCourse!.id ? { ...c, content: c.content.map(m => ({ ...m, categories: m.categories.map(ca => ca.id === parentId ? { ...ca, materials: editingMaterial ? ca.materials.map(ma => ma.id === editingMaterial.id ? {...ma, ...d} : ma) : [...ca.materials, {...d, id: generateId()}] } : ca) })) } : c); updateCourses(updated); setSelectedCourse(updated.find(c => c.id === selectedCourse!.id)!); setIsMaterialModalOpen(false); }} materialToEdit={editingMaterial}/>}
       {isSidebarLinkModalOpen && <SidebarLinkFormModal isOpen={isSidebarLinkModalOpen} onClose={() => setIsSidebarLinkModalOpen(false)} onSave={(d) => { if(editingSidebarLink) updateLinks(sidebarLinks.map(l => l.id === editingSidebarLink.id ? {...l, ...d} : l)); else updateLinks([...sidebarLinks, {...d, id: generateId()}]); setIsSidebarLinkModalOpen(false); }} linkToEdit={editingSidebarLink}/>}
-      {isEventModalOpen && <EventFormModal isOpen={isEventModalOpen} onClose={() => setIsEventModalOpen(false)} onSave={(d) => { if(editingEvent) updateEvents(calendarEvents.map(e => e.id === editingEvent.id ? {...e, ...d} : e)); else updateEvents([...calendarEvents, {...d, id: generateId()}]); setIsEventModalOpen(false); }} eventToEdit={editingEvent} selectedDate={selectedDateForEvent} courses={courses}/>}
+      {isEventModalOpen && <EventFormModal isOpen={isEventModalOpen} onClose={() => setIsEventModalOpen(false)} onSave={(d) => { if(editingEvent) updateEvents(calendarEvents.map(e => e.id === editingEvent.id ? {...e, ...d} : e)); else updateEvents([...calendarEvents, {...d, id: generateId()}]); setIsEventModalOpen(true); }} eventToEdit={editingEvent} selectedDate={selectedDateForEvent} courses={courses}/>}
       {isProfileModalOpen && <ProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} currentUser={currentUser} onSave={handleSaveProfile}/>}
       {isSimulationModalOpen && <SimulationSetupModal isOpen={isSimulationModalOpen} onClose={() => setIsSimulationModalOpen(false)} onStart={(y, c) => { setSimulationContext({ year: y, classroom: c }); setIsSimulationModalOpen(false); }}/>}
     </div>

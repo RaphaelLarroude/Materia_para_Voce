@@ -51,6 +51,7 @@ export const translations = {
     simulatingAs: 'Simulando como Ano {year}º, Sala {classroom}',
     studyPlanner: 'Planejador de Estudos',
     studyPlannerDesc: 'Crie seu ciclo ou rotina personalizada com IA.',
+    yourLastPlanner: 'Seu último planner',
 
     // Study Planner
     studyCycle: 'Ciclo de Estudos',
@@ -67,6 +68,7 @@ export const translations = {
     difficultyLevel: 'Nível: {level}',
     weekendRoutineTitle: 'Rotina no Fim de Semana',
     weekendRoutineDesc: 'Manter horários de sono e refeições no Sábado e Domingo?',
+    savePlanner: 'Salvar Cronograma',
 
     // Course Card
     notStartedYet: 'Ainda não iniciado',
@@ -267,6 +269,7 @@ export const translations = {
     simulatingAs: 'Simulating as Year {year}, Classroom {classroom}',
     studyPlanner: 'Study Planner',
     studyPlannerDesc: 'Create your custom study cycle or routine with AI.',
+    yourLastPlanner: 'Your last planner',
 
     // Study Planner
     studyCycle: 'Study Cycle',
@@ -283,6 +286,7 @@ export const translations = {
     difficultyLevel: 'Level: {level}',
     weekendRoutineTitle: 'Weekend Routine',
     weekendRoutineDesc: 'Maintain fixed sleep and meal times on Saturday and Sunday?',
+    savePlanner: 'Save Planner',
 
     // Course Card
     notStartedYet: 'Not started yet',
@@ -461,7 +465,7 @@ export const translations = {
     portuguese: 'Português',
     english: 'English',
     spanish: 'Español',
-    manageUsers: 'Administrar Usuarios',
+    manageUsers: 'Gestión de Usuarios',
     myProfile: 'Mi Perfil',
     simulateStudentView: 'Simular Vista de Alumno',
 
@@ -480,6 +484,7 @@ export const translations = {
     simulatingAs: 'Simulando como Año {year}, Clase {classroom}',
     studyPlanner: 'Planificador de Estudos',
     studyPlannerDesc: 'Crea tu ciclo o rutina personalizada con IA.',
+    yourLastPlanner: 'Tu último planner',
     
     // Study Planner
     studyCycle: 'Ciclo de Estudos',
@@ -496,6 +501,7 @@ export const translations = {
     difficultyLevel: 'Nivel: {level}',
     weekendRoutineTitle: 'Rutina de Fin de Semana',
     weekendRoutineDesc: '¿Mantener horarios fijos de sueño y comidas los sábados y domingos?',
+    savePlanner: 'Guardar Planificador',
 
     // Course Card
     notStartedYet: 'Aún no ha comenzado',
@@ -614,7 +620,7 @@ export const translations = {
     createModule: 'Crear Nuevo Módulo',
     moduleTitle: 'Título del Módulo',
     moduleIllustration: 'Imagen de Ilustración',
-    editCategory: 'Editar Categoría',
+    editCategory: 'Editar Categoria',
     createCategory: 'Crear Nueva Categoría',
     categoryTitle: 'Título de la Categoría',
     categoryIllustration: 'Imagen de Ilustración',
@@ -630,7 +636,7 @@ export const translations = {
     fieldRequired: 'Este campo es obligatorio',
     selectFileOrLink: 'Por favor, sube un archivo o introduce un enlace.',
     changeImage: 'Cambiar Imagen',
-    fileTooLargeError: 'El archivo es demasiado grande y excede el límite de almacenamiento.',
+    fileTooLargeError: 'El archivo es demasiado grande y excede el límite de armazenamento.',
     fileProcessingError: 'Error al procesar el archivo.',
     visibleToClassrooms: 'Visible para las Clases',
     visibleToYears: 'Visible para los Años',
